@@ -33,7 +33,7 @@ class App extends Component {
     const data = {
       token:token,
       amount : 111,
-      idempotency_key:6789678,
+      idempotency_key:123456,
     }
     console.log(token)
     fetch("/.netlify/functions/hello", {
