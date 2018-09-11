@@ -1,4 +1,4 @@
-const stripe = require("stripe")("sk_test_JSTgGfJoc26Yk7f15S1pEJjz");
+const stripe = require("stripe")(process.env.SECRET_KEY);
 
 const statusCode = 200;
 const headers = {
