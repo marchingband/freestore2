@@ -186,8 +186,7 @@ class Checkout extends Component {
             </label>
           </p>
         {fields.map((field,index)=>{
-          !this.state[field] && (this.setState({[field]:''}))
-          return (<Field key={index} name={field} value={this.state[field]} onChange={this.handleChange}/>)
+          return (<Field key={index} name={field} value={this.state[field] || ''} onChange={this.handleChange}/>)
         }
         )}
         </form>
