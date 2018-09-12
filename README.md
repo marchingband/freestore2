@@ -1,39 +1,15 @@
-This project is based on [Create React App](https://github.com/facebookincubator/create-react-app). (For more information about Create react App, check their full [documentation](https://github.com/facebookincubator/create-react-app#create-react-app).)
+Freestore is a project to enable anyone, without coding, to build and publish an e-commerce store.
+First fork this repo.
+Now, looking inside the templates directory, find the template you wish to use, and edit it.
+Place a <*> at the top, indicating that this is your chosen template, and fill out the required info.
+Upload your photos to the images folder, and copy/paste their names into the template, where you want them placed.
+Login to Netlify and create a new deployment from your repository.
+Login to Stripe, and determine your API keys. copy/paste them into the environment variables in the Netlify dashboard.
+Purchase your domain name through Netlify.
+Hit deploy!
 
-The main addition is a new folder: `src/lambda`. Each JavaScript file in there will automatically be prepared for Lambda function deployment.
+Netlify will invoke node and run parseText.js, which will parse the text document, and build store.js in the src directory, which exports all the data for your website. Netlify will then invoke yarn to build the react website, and deploy it.
 
-As an example, we've included a small `src/lambda/hello.js` function, which will be deployed to `/.netlify/functions/hello`.
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify/create-react-app-lambda)
-
-## Babel/webpack compilation
-
-All functions are compiled with webpack using the Babel Loader, so you can use modern JavaScript, import npm modules, etc., without any extra setup.
-
-## Local Development
-
-Before developing, clone the repository and run `yarn` from the root of the repo to install all dependencies.
-
-### Run the functions dev server
-
-From inside the project folder, run:
-
-```
-yarn start:lambda
-```
-
-This will open a local server running at `http://localhost:9000` serving your Lambda functions, updating as you make changes in the `src/lambda` folder.
-
-You can then access your functions directly at `http://localhost:9000/{function_name}`, but to access them with the app, you'll need to start the app dev server.
-
-### Run the app dev server
-
-While the functions server is still running, open a new terminal tab and run:
-
-```
-yarn start
-```
-
-This will start the normal create-react-app dev server and open your app at `http://localhost:3000`.
-
-Local in-app requests to the relative path `/.netlify/functions/*` will automatically be proxied to the local functions dev server.
+DEVELOPERS : 
+if you would like to build/publish a store of your own design through freestore, please feel free! Pull Requests welcome!!!
+you will see that parseStore.js looks for the <*>, and then looks for the appropriate parser for that template. Write a simple parser, and write your React Script, and publish your version of freestore! Power 2 the people!
