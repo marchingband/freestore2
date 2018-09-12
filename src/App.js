@@ -2,6 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
+import uuid from 'uuid/v4'
 
 const {name,products} = JSON.parse(data)
 const images = {}
@@ -146,7 +147,7 @@ class Checkout extends Component {
     const data = {
       token:token,
       amount : 111,
-      idempotency_key:123123123,
+      idempotency_key:uuid(),
     }
     console.log(token)
     fetch("/.netlify/functions/purchase", {
