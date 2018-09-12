@@ -145,7 +145,7 @@ class Checkout extends Component {
   }
   encodeData=d=>{
     const names = Object.keys(this.state)
-    const dataStrings = names.map(name=>`${name} : ${state[name]}`)
+    const dataStrings = names.map(name=>`${name} : ${this.state[name]}`)
     const data = dataStrings.join('\n')
     console.log(data)
     return data
