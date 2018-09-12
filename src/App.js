@@ -1,42 +1,155 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import StripeCheckout from "react-stripe-checkout"
-import logo from './logo.svg';
 import './App.css';
+import {data} from './store.js';
 
-class LambdaDemo extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {loading: false, msg: null};
-  }
+const {name,products} = JSON.parse(data)
+const images = {}
+products.forEach(product=>{
+  var imageName = product.image.text
+  images[imageName]=require('../public/images/'+imageName)  
+})
+var id=0;
 
-  handleClick = (e) => {
-    e.preventDefault();
-
-    this.setState({loading: true});
-    fetch('/.netlify/functions/hello')
-      .then(response => response.json())
-      .then(json => this.setState({loading: false, msg: json.msg}));
-  }
-
-  render() {
-    const {loading, msg} = this.state;
-
-    return <p>
-      <button onClick={this.handleClick}>{loading ? 'Loading...' : 'Call Lambda'}</button><br/>
-      <span>{msg}</span>
-    </p>
+class Product extends PureComponent {
+  render(){
+    const {onClickAddToCart} = this.props
+    const {name,price,description,image} = this.props.data
+    
+    return(
+      <div className="Product">
+        <img onClick={()=>{}} className="Product-image"  src={images[image.text]}/>
+        <div className="Product-bar">
+          <div className="Product-name">{name.text}</div>
+          <div className="Product-price">${price.text}</div>
+        </div>
+        <div 
+          onClick={()=>onClickAddToCart(this.props.data)}
+          onTouchStart={()=>this.addToCart.style.backgroundColor='white'}
+          onTouchEnd={()=>this.addToCart.style.backgroundColor='black'}
+          className="Add-to-cart"
+          ref={(i)=>this.addToCart = i}>
+        add to cart
+        </div>
+        <div className="Product-description">{description.text}</div>
+      </div>
+    )
   }
 }
 
+
+
 class App extends Component {
+  constructor(props){
+    super(props)
+    this.state={
+      view:'productList',
+      total:0
+    }
+  }
+  componentDidMount(){
+    window.setTimeout(()=>this.container.style.opacity=1,100)
+  }
+  render() {
+    return (
+      <div className="App">
+        <div className="Container" ref={i=>this.container=i}>
+          <div className='Top-bar'>
+            <div className='Store-title'>{name.text}</div>
+            <CartIcon
+              ref={i=> this.cartIcon=i}
+              toggleCartVisible={this.toggleCartVisible}/>
+          </div>
+          {this.state.view=='cart' && 
+            <Cart 
+              removeFromCart={this.cartIcon.removeFromCart} 
+              checkOut={this.checkOut} 
+              getCart={this.cartIcon.getCart}/>
+          }
+          {this.state.view=='productList' && 
+            <Contents 
+              onClickAddToCart={(i)=>this.cartIcon.onClickAddToCart(i)}
+              products={products}/>
+          }
+          {this.state.view=='checkout' && 
+            <Checkout total={this.state.total}/>
+          }
+        </div>
+      </div>
+    );
+  }
+  onClickAddToCart=item=>{
+    id++
+    var {cart} = this.state
+    cart.push({item:item,key:id})
+    this.setState({cart})
+  }
+  checkOut=()=>this.setState({view:'checkout'})
+  removeFromCart=item=>{
+    const {cart} = this.state
+    const newCart = cart.slice(0,item-1).concat(cart.slice(item))
+    this.setState({cart:newCart})
+  }
+  toggleCartVisible=()=>{
+    if(this.state.view=='cart'){
+      this.container.style.transitionProperty='none'
+      this.setState({view:'productList'})
+    }else{
+      this.container.style.opacity=0
+      this.setState({view:'cart'})
+      window.setTimeout(()=>{
+        this.container.style.transitionProperty='opacity'
+        this.container.style.opacity=1},100
+      )
+    }
+  }
+}
+
+class CartIcon extends Component {
+  constructor(){
+    super()
+    this.state={
+      cart:[]
+    }
+  }
+  render(){
+    return(
+      <div 
+        className='Cart-icon'
+        onClick={this.onClick}
+      >{this.state.cart.length}</div>
+    )
+  }
+  onClick=()=>this.props.toggleCartVisible()
+  onClickAddToCart=item=>{
+    id++
+    var {cart} = this.state
+    cart.push({item:item,key:id})
+    this.setState({cart})
+  }
+  getCart=()=>this.state.cart
+  removeFromCart=item=>this.setState({
+    cart:this.state.cart.slice(0,item-1)
+    .concat(this.state.cart.slice(item))}
+  )
+}
+
+const fields = ['test','test2','test3']
+
+class Checkout extends Component {
+  constructor(props){
+    super(props)
+    this.state={
+    }
+  }
   onToken = token => {
     const data = {
       token:token,
       amount : 111,
-      idempotency_key:123456,
+      idempotency_key:123123123,
     }
     console.log(token)
-    fetch("/.netlify/functions/hello", {
+    fetch("/.netlify/functions/purchase", {
       method: "POST",
       body: JSON.stringify(data)
     }).then(response => {
@@ -46,24 +159,80 @@ class App extends Component {
       });
     });
   }
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <LambdaDemo/>
+  render(){
+    return(
+      <div className='container'>
+        {fields.map((field,index)=>
+          <Field key={index} name={field} onChange={this.handleChange}/>
+        )}
         <StripeCheckout
           token={this.onToken}
           stripeKey={'pk_test_cD1gIBptwIBFuzEaIBXSuLvJ'}
-        />  
+        />      
       </div>
-    );
+    )
+  }
+  handleChange=({name,value})=>{
+    this.setState({[name]:value})
+    console.log(name + ':' + value)
+    console.log(this.state.test)
   }
 }
+
+class Field extends Component{
+  render(){
+    return(
+      <div>
+        <form onSubmit={(e)=>{e.preventDefault()}} >
+          <label>{this.props.name}
+            <input type='text' onChange={this.handleChange}/>
+          </label>
+        </form>
+      </div>
+    )
+  }
+  handleChange=(event)=>{
+    this.props.onChange({name:this.props.name,value:event.target.value})
+  }
+
+}
+
+const Contents = ({products, onClickAddToCart}) => 
+  products.map((product)=>
+    <Product
+     key={id++}
+     onClickAddToCart={()=>onClickAddToCart(product)}
+     data={product}/>
+  )
+
+
+class Cart extends PureComponent {
+  componentDidMount(){window.setTimeout(()=>this.cartContainer.style.opacity=1,100)}
+  render(){
+    const cart = this.props.getCart()
+    return(
+      <div className='Cart-container' ref={i=>this.cartContainer=i}>
+        <div className='Items-container'>
+          {cart.map((item,index)=>{
+            return (
+              <div className='Cart-line' key={id++}>
+                <img className='Cart-item-image' src={'/images/'+item.item.image.text}/>
+                <div className='Cart-item-name'>{item.item.name.text}</div>
+                <div className='Cart-item-price'>${item.item.price.text}</div>
+                <div className='Cart-remove-x' onClick={()=>{this.props.removeFromCart(index+1);this.forceUpdate()}}>x</div>
+              </div>
+            )
+          })}
+        </div>
+        <div className='Cart-footer'>
+          <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span>
+          <span className='Cart-footer-checkout' onClick={()=>this.props.checkOut(this.getTotal())}>checkout</span>
+        </div>
+      </div>
+    )
+  }
+  getTotal=()=>this.props.getCart().reduce((acc,item)=>acc+Number(item.item.price.text),0)
+};
+
 
 export default App;
