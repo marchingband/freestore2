@@ -80,22 +80,13 @@ exports.handler = function(event, context, callback) {
         body: JSON.stringify({status,email:data.token.email})
       });
 
-      if(status=='succeeded'){
-        mail({
-          from: "Fred Foo ✔ <foo@blurdybloop.com>", // sender address
-          to: "youthclubrecords@gmail.com", // list of receivers
-          subject: "Hello ✔", // Subject line
-          text: "Hello world ✔", // plaintext body
-          html: "<b>Hello world ✔</b>" // html body
-        });
-      //   nodemailer.mail(mailOptions, function (err, info) {
-      //     if(err)
-      //       console.log(err)
-      //     else
-      //       console.log(info);
-      //  });
-      }
-
     }
   );
+  mail({
+    from: "Fred Foo ✔ <foo@blurdybloop.com>", // sender address
+    to: "youthclubrecords@gmail.com", // list of receivers
+    subject: "Hello ✔", // Subject line
+    text: "Hello world ✔", // plaintext body
+    html: "<b>Hello world ✔</b>" // html body
+  });
 }
