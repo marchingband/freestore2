@@ -172,7 +172,7 @@ class Checkout extends Component {
         {/* {fields.map((field,index)=>
           <Field key={index} name={field} onChange={this.handleChange}/>
         )} */}
-        <form ref={i=>this.infoForm=i} onSubmit={this.handleSubmit}>
+        <form ref={i=>this.infoForm=i}>
           <p>
             <label>
               Your Name: <input type="text" name="name" value={name} onChange={this.handleChange} />
@@ -197,26 +197,19 @@ class Checkout extends Component {
       </div>
     )
   }
-  // handleChange=({name,value})=>{
-  //   this.setState({[name]:value})
-  //   // console.log(name + ':' + value)
-  //   // console.log(this.state.test)
-  // }
   encode = (data) => {
     return Object.keys(data)
         .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
         .join("&");
   }
-  handleSubmit = e => {
+  submit = () => {
     fetch("/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: this.encode({ "form-name": "contact", ...this.state })
+      body: this.encode({ "form-name": "purchase", ...this.state })
     })
       .then(() => alert("Success!"))
       .catch(error => alert(error));
-
-    e.preventDefault();
   };
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 }
@@ -258,7 +251,7 @@ class Cart extends PureComponent {
           {cart.map((item,index)=>{
             return (
               <div className='Cart-line' key={id++}>
-                <img className='Cart-item-image' src={'/images/'+item.item.image.text}/>
+                <img className='Cart-item-image' src={images[item.item.image.text]}/>
                 <div className='Cart-item-name'>{item.item.name.text}</div>
                 <div className='Cart-item-price'>${item.item.price.text}</div>
                 <div className='Cart-remove-x' onClick={()=>{this.props.removeFromCart(index+1);this.forceUpdate()}}>x</div>
