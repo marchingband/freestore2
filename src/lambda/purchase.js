@@ -1,20 +1,5 @@
 const stripe = require("stripe")(process.env.SECRET_KEY);
-const mail = require("nodemailer").mail;
-
-
-// var transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//          user: 'andymarch@protonmail.com',
-//          pass: process.env.EMAIL_PASSWORD
-//      }
-//  });
-//  const mailOptions = {
-//   from: 'andymarch@protonmail.com', // sender address
-//   to: 'youthclubrecords@gmail.com', // list of receivers
-//   subject: 'someone bought a thing', // Subject line
-//   html: '<p>oh fukkkkk ya</p>'// plain text body
-// };
+const nodemailer = require("nodemailer");
 
 const statusCode = 200;
 const headers = {
@@ -82,7 +67,7 @@ exports.handler = function(event, context, callback) {
 
     }
   );
-  mail({
+  nodemailer.mail({
     from: "Fred Foo ✔ <foo@blurdybloop.com>", // sender address
     to: "youthclubrecords@gmail.com", // list of receivers
     subject: "Hello ✔", // Subject line
