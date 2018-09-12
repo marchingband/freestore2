@@ -13,3 +13,7 @@ for(var i = 0; i<templates.length; i++){
     fs.writeFileSync('./src/store.js',output)
   }
 }
+
+const password = process.env.PUBLIC_KEY
+const passwordfile = `const PUBLIC_KEY =  \`` + password + `\`` + "\nmodule.exports={data}"
+fs.writeFileSync('./src/PUBLIC_KEY.js',passwordfile)

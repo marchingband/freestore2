@@ -3,6 +3,7 @@ import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
 import uuid from 'uuid/v4'
+import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
 const {name,products} = JSON.parse(data)
 const images = {}
@@ -168,7 +169,7 @@ class Checkout extends Component {
         )}
         <StripeCheckout
           token={this.onToken}
-          stripeKey={process.env.PUBLIC_KEY}
+          stripeKey={PUBLIC_KEY}
         />      
       </div>
     )
