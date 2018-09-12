@@ -160,8 +160,12 @@ class Checkout extends Component {
     }).then(response => {
       response.json().then(data => {
         console.log(data)
-        alert(`We are in business, ${data.email}`);
-        this.handleSubmit()
+        if(data.status=='succeeded'){
+          alert(`payment was successful`);
+          this.submit()
+        }else{
+          alert
+        }
       });
     });
   }
