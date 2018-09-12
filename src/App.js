@@ -163,42 +163,20 @@ class Checkout extends Component {
         if(data.status=='succeeded'){
           alert(`payment was successful`);
           this.submit()
-        }else{
-          alert
         }
       });
     });
   }
   render(){
-    const { name, email, message } = this.state;
     return(
       <div className='container'>
         <form ref={i=>this.infoForm=i}>
-          <p>
-            <label>
-              Your Name: <input type="text" name="name" value={name} onChange={this.handleChange} />
-            </label>
-          </p>
-          <p>
-            <label>
-              Your Email: <input type="email" name="email" value={email} onChange={this.handleChange} />
-            </label>
-          </p>
-          <p>
-            <label>
-              Message: <textarea name="message" value={message} onChange={this.handleChange} />
-            </label>
-          </p>
-        {fields.map((field,index)=>{
-          return (<Field key={index} name={field} value={this.state[field] || ''} onChange={this.handleChange}/>)
-        }
-        )}
+          {fields.map((field,index)=>
+            <Field key={index} name={field} value={this.state[field] || ''} onChange={this.handleChange}/>)
+          }
         </form>
-
-        <StripeCheckout
-          token={this.onToken}
-          stripeKey={PUBLIC_KEY}
-        />      
+        <StripeCheckout token={this.onToken} stripeKey={PUBLIC_KEY}/>      
+        {Object.keys(this.state).map(s=><p>{s} : {this.state[s]}  </p>)}
       </div>
     )
   }
