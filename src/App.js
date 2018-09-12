@@ -168,15 +168,15 @@ class Checkout extends Component {
         )}
         <StripeCheckout
           token={this.onToken}
-          stripeKey={'pk_test_cD1gIBptwIBFuzEaIBXSuLvJ'}
+          stripeKey={process.env.PUBLIC_KEY}
         />      
       </div>
     )
   }
   handleChange=({name,value})=>{
     this.setState({[name]:value})
-    console.log(name + ':' + value)
-    console.log(this.state.test)
+    // console.log(name + ':' + value)
+    // console.log(this.state.test)
   }
 }
 
