@@ -141,11 +141,7 @@ const fields = ['Name','Street Address','City', 'ZIP code / Postal Code', 'Count
 class Checkout extends Component {
   constructor(props){
     super(props)
-    this.state={
-      name:'',
-      email:'',
-      message:''
-    }
+    this.state={}
   }
   onToken = token => {
     const data = {
@@ -171,9 +167,16 @@ class Checkout extends Component {
     return(
       <div className='container'>
         <form ref={i=>this.infoForm=i}>
-          {fields.map((field,index)=>
-            <Field key={index} name={field} value={this.state[field] || ''} onChange={this.handleChange}/>)
-          }
+          {fields.map((field,index)=>{
+            const stateName = field.split(' ').join('').toLowerCase
+            return(
+              <Field 
+                key={index}
+                label={field}
+                name={stateName} 
+                value={this.state[stateName] || ''} 
+                onChange={this.handleChange}/>
+          )})}
         </form>
         <StripeCheckout token={this.onToken} stripeKey={PUBLIC_KEY}/>      
         {Object.keys(this.state).map(s=><p>{s} : {this.state[s]}  </p>)}
