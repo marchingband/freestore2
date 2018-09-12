@@ -142,6 +142,9 @@ class Checkout extends Component {
   constructor(props){
     super(props)
     this.state={
+      name:'',
+      email:'',
+      message:''
     }
   }
   onToken = token => {
@@ -160,21 +163,35 @@ class Checkout extends Component {
         alert(`We are in business, ${data.email}`);
       });
     });
-    console.log('try to send email now')
-    fetch("/.netlify/functions/email", {
-      method: "POST",
-      body: JSON.stringify(data)
-    }).then(response=>{
-      console.log(response)
-    })
-    console.log('did it work?')
   }
   render(){
+    const { name, email, message } = this.state;
     return(
       <div className='container'>
-        {fields.map((field,index)=>
+        {/* {fields.map((field,index)=>
           <Field key={index} name={field} onChange={this.handleChange}/>
-        )}
+        )} */}
+        <form onSubmit={this.handleSubmit}>
+          <p>
+            <label>
+              Your Name: <input type="text" name="name" value={name} onChange={this.handleChange} />
+            </label>
+          </p>
+          <p>
+            <label>
+              Your Email: <input type="email" name="email" value={email} onChange={this.handleChange} />
+            </label>
+          </p>
+          <p>
+            <label>
+              Message: <textarea name="message" value={message} onChange={this.handleChange} />
+            </label>
+          </p>
+          <p>
+            <button type="submit">Send</button>
+          </p>
+        </form>
+
         <StripeCheckout
           token={this.onToken}
           stripeKey={PUBLIC_KEY}
@@ -182,30 +199,47 @@ class Checkout extends Component {
       </div>
     )
   }
-  handleChange=({name,value})=>{
-    this.setState({[name]:value})
-    // console.log(name + ':' + value)
-    // console.log(this.state.test)
+  // handleChange=({name,value})=>{
+  //   this.setState({[name]:value})
+  //   // console.log(name + ':' + value)
+  //   // console.log(this.state.test)
+  // }
+  encode = (data) => {
+    return Object.keys(data)
+        .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+        .join("&");
   }
+  handleSubmit = e => {
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: this.encode({ "form-name": "contact", ...this.state })
+    })
+      .then(() => alert("Success!"))
+      .catch(error => alert(error));
+
+    e.preventDefault();
+  };
+  handleChange = e => this.setState({ [e.target.name]: e.target.value });
 }
 
-class Field extends Component{
-  render(){
-    return(
-      <div>
-        <form onSubmit={(e)=>{e.preventDefault()}} >
-          <label>{this.props.name}
-            <input type='text' onChange={this.handleChange}/>
-          </label>
-        </form>
-      </div>
-    )
-  }
-  handleChange=(event)=>{
-    this.props.onChange({name:this.props.name,value:event.target.value})
-  }
+// class Field extends Component{
+//   render(){
+//     return(
+//       <div>
+//         <form onSubmit={(e)=>{e.preventDefault()}} >
+//           <label>{this.props.name}
+//             <input type='text' onChange={this.handleChange}/>
+//           </label>
+//         </form>
+//       </div>
+//     )
+//   }
+//   handleChange=(event)=>{
+//     this.props.onChange({name:this.props.name,value:event.target.value})
+//   }
 
-}
+// }
 
 const Contents = ({products, onClickAddToCart}) => 
   products.map((product)=>
