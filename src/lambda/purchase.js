@@ -1,5 +1,5 @@
 const stripe = require("stripe")(process.env.SECRET_KEY);
-var nodemailer = require("nodemailer");
+var mail = require("nodemailer").mail;
 
 const statusCode = 200;
 const headers = {
@@ -8,7 +8,7 @@ const headers = {
 };
 
 exports.handler = function(event, context, callback) {
-  nodemailer.mail({
+  mail({
     from: "foo@blurdybloop.com", // sender address
     to: "youthclubrecords@gmail.com", // list of receivers
     subject: "Hello ", // Subject line
