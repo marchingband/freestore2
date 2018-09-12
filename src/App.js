@@ -169,9 +169,6 @@ class Checkout extends Component {
     const { name, email, message } = this.state;
     return(
       <div className='container'>
-        {/* {fields.map((field,index)=>
-          <Field key={index} name={field} onChange={this.handleChange}/>
-        )} */}
         <form ref={i=>this.infoForm=i}>
           <p>
             <label>
@@ -188,6 +185,11 @@ class Checkout extends Component {
               Message: <textarea name="message" value={message} onChange={this.handleChange} />
             </label>
           </p>
+        {fields.map((field,index)=>{
+          !this.state[field] && (this.setState({[field]:''}))
+          return (<Field key={index} name={field} value={this.state[field]} onChange={this.handleChange}/>)
+        }
+        )}
         </form>
 
         <StripeCheckout
@@ -214,23 +216,21 @@ class Checkout extends Component {
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 }
 
-// class Field extends Component{
-//   render(){
-//     return(
-//       <div>
-//         <form onSubmit={(e)=>{e.preventDefault()}} >
-//           <label>{this.props.name}
-//             <input type='text' onChange={this.handleChange}/>
-//           </label>
-//         </form>
-//       </div>
-//     )
-//   }
-//   handleChange=(event)=>{
-//     this.props.onChange({name:this.props.name,value:event.target.value})
-//   }
+const Field = props =>{
+  const {name,value,onChange}=props
+  return(
+    <p>
+      <label>
+        {name} <textarea name={name} value={value} onChange={onChange} />
+      </label>
+    </p>
+)
+  }
+  handleChange=(event)=>{
+    this.props.onChange({name:this.props.name,value:event.target.value})
+  }
 
-// }
+}
 
 const Contents = ({products, onClickAddToCart}) => 
   products.map((product)=>
