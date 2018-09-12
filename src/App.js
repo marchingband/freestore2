@@ -147,11 +147,11 @@ class Checkout extends Component {
     const names = Object.keys(this.state)
     const userDataStrings = names.map(name=>`${name} : ${this.state[name]}`)
     const userData = userDataStrings.join('\n')
-    const tokenString = JSON.stringify(token,null,1)
+    const tokenString = JSON.stringify(token,null,3).replace(/[{}]/g, "")
     const data = `
-    ${userData}
-    stripe payment data:
-    ${tokenString}`
+${userData}
+stripe payment data:
+${tokenString}`
     console.log(data)
     return data
   }
@@ -191,7 +191,7 @@ class Checkout extends Component {
           )})}
         </form>
         <StripeCheckout token={this.onToken} stripeKey={PUBLIC_KEY}/>      
-        {Object.keys(this.state).map(s=><p>{s} : {this.state[s]}  </p>)}
+        {/* {Object.keys(this.state).map(s=><p>{s} : {this.state[s]}  </p>)} */}
       </div>
     )
   }
