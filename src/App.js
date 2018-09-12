@@ -168,7 +168,7 @@ class Checkout extends Component {
       <div className='container'>
         <form ref={i=>this.infoForm=i}>
           {fields.map((field,index)=>{
-            const stateName = field.split(' ').join('').toLowerCase
+            const stateName = field.split(' ').join('').toLowerCase()
             return(
               <Field 
                 key={index}
@@ -201,11 +201,11 @@ class Checkout extends Component {
 }
 
 const Field = props =>{
-  const {name,value,onChange}=props
+  const {label,name,value,onChange}=props
   return(
     <p>
       <label>
-        {name} <textarea name={name} value={value} onChange={onChange} />
+        {label} <textarea name={name} value={value} onChange={onChange} />
       </label>
     </p>
   )
