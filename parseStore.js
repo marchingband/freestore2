@@ -15,5 +15,5 @@ for(var i = 0; i<templates.length; i++){
 }
 
 const password = process.env.PUBLIC_KEY
-const passwordfile = `const PUBLIC_KEY =  \`` + password + `\`` + "\nmodule.exports={data}"
+const passwordfile = `const PUBLIC_KEY =  \`` + password + `\`` + "\nmodule.exports={PUBLIC_KEY}"
 fs.writeFileSync('./src/PUBLIC_KEY.js',passwordfile)
