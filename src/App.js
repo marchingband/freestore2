@@ -161,6 +161,7 @@ class Checkout extends Component {
       response.json().then(data => {
         console.log(data)
         alert(`We are in business, ${data.email}`);
+        this.handleSubmit()
       });
     });
   }
@@ -171,7 +172,7 @@ class Checkout extends Component {
         {/* {fields.map((field,index)=>
           <Field key={index} name={field} onChange={this.handleChange}/>
         )} */}
-        <form onSubmit={this.handleSubmit}>
+        <form ref={i=>this.infoForm=i} onSubmit={this.handleSubmit}>
           <p>
             <label>
               Your Name: <input type="text" name="name" value={name} onChange={this.handleChange} />
@@ -186,9 +187,6 @@ class Checkout extends Component {
             <label>
               Message: <textarea name="message" value={message} onChange={this.handleChange} />
             </label>
-          </p>
-          <p>
-            <button type="submit">Send</button>
           </p>
         </form>
 
