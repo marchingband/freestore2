@@ -192,7 +192,7 @@ class Checkout extends Component {
     fetch("/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: this.encode({ "form-name": "purchase", ...this.state })
+      body: this.encode({ "form-name": "contact", ...this.state })
     })
       .then(() => alert("Success!"))
       .catch(error => alert(error));
