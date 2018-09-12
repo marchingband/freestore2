@@ -1,5 +1,4 @@
 const stripe = require("stripe")(process.env.SECRET_KEY);
-var mail = require("nodemailer").mail;
 
 const statusCode = 200;
 const headers = {
@@ -8,13 +7,6 @@ const headers = {
 };
 
 exports.handler = function(event, context, callback) {
-  mail({
-    from: "foo@blurdybloop.com", // sender address
-    to: "youthclubrecords@gmail.com", // list of receivers
-    subject: "Hello ", // Subject line
-    text: "Hello world ", // plaintext body
-    html: "<b>Hello world </b>" // html body
-  });
 
 
   //-- We only care to do anything if this is our POST request.

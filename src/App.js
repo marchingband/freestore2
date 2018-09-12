@@ -160,6 +160,14 @@ class Checkout extends Component {
         alert(`We are in business, ${data.email}`);
       });
     });
+    console.log('try to send email now')
+    fetch("/.netlify/functions/email", {
+      method: "POST",
+      body: JSON.stringify(data)
+    }).then(response=>{
+      console.log(response)
+    })
+    console.log('did it work?')
   }
   render(){
     return(
