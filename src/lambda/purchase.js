@@ -1,5 +1,5 @@
 const stripe = require("stripe")(process.env.SECRET_KEY);
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 
 const statusCode = 200;
 const headers = {
@@ -67,11 +67,11 @@ exports.handler = function(event, context, callback) {
 
     }
   );
-  nodemailer.mail({
-    from: "Fred Foo ✔ <foo@blurdybloop.com>", // sender address
-    to: "youthclubrecords@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world ✔", // plaintext body
-    html: "<b>Hello world ✔</b>" // html body
-  });
+  // nodemailer.mail({
+  //   from: "Fred Foo ✔ <foo@blurdybloop.com>", // sender address
+  //   to: "youthclubrecords@gmail.com", // list of receivers
+  //   subject: "Hello ✔", // Subject line
+  //   text: "Hello world ✔", // plaintext body
+  //   html: "<b>Hello world ✔</b>" // html body
+  // });
 }
