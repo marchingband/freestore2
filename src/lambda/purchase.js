@@ -1,5 +1,5 @@
 const stripe = require("stripe")(process.env.SECRET_KEY);
-// const nodemailer = require("nodemailer");
+var nodemailer = require("nodemailer");
 
 const statusCode = 200;
 const headers = {
