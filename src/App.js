@@ -135,7 +135,7 @@ class CartIcon extends Component {
   )
 }
 
-const fields = ['test','test2','test3']
+const fields = ['Name','Street Address','City', 'ZIP code / Postal Code', 'Country']
 
 class Checkout extends Component {
   constructor(props){
