@@ -4,12 +4,12 @@ const nodemailer= require('nodemailer')
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-         user: 'youthclubrecords@gmail.com',
+         user: 'andymarch@protonmail.com',
          pass: process.env.EMAIL_PASSWORD
      }
  });
  const mailOptions = {
-  from: 'youthclubrecords@gmail.com', // sender address
+  from: 'andymarch@protonmail.com', // sender address
   to: 'youthclubrecords@gmail.com', // list of receivers
   subject: 'someone bought a thing', // Subject line
   html: '<p>oh fukkkkk ya</p>'// plain text body
