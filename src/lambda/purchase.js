@@ -1,4 +1,19 @@
 const stripe = require("stripe")(process.env.SECRET_KEY);
+const nodemailer= require('nodemailer')
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+         user: 'youthclubrecords@gmail.com',
+         pass: process.env.EMAIL_PASSWORD
+     }
+ });
+ const mailOptions = {
+  from: 'youthclubrecords@gmail.com', // sender address
+  to: 'youthclubrecords@gmail.com', // list of receivers
+  subject: 'someone bought a thing', // Subject line
+  html: '<p>oh fukkkkk ya</p>'// plain text body
+};
 
 const statusCode = 200;
 const headers = {
@@ -63,6 +78,16 @@ exports.handler = function(event, context, callback) {
         headers,
         body: JSON.stringify({status,email:data.token.email})
       });
+
+      if(status=='succeeded'){
+        transporter.sendMail(mailOptions, function (err, info) {
+          if(err)
+            console.log(err)
+          else
+            console.log(info);
+       });
+      }
+
     }
   );
 }
