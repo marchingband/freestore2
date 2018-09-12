@@ -147,10 +147,11 @@ class Checkout extends Component {
     const names = Object.keys(this.state)
     const userDataStrings = names.map(name=>`${name} : ${this.state[name]}`)
     const userData = userDataStrings.join('\n')
-    const tokenString = JSON.stringify(token,null,3).replace(/[^\w\s:_@.]/g,'');
+    const tokenString = JSON.stringify(token,null,3).replace(/[^\w\s:_@.]/g,'')
+    const data = `
 ${userData}
-
-stripe payment data:${tokenString}`
+stripe payment data:
+${tokenString}`
     console.log(data)
     return data
   }
