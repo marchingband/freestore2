@@ -7,7 +7,7 @@ const {name,products} = JSON.parse(data)
 const images = {}
 products.forEach(product=>{
   var imageName = product.image.text
-  images[imageName]=require('../public/images/'+imageName)  
+  images[imageName]=require('../images/'+imageName)  
 })
 var id=0;
 
