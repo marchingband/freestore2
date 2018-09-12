@@ -1,4 +1,4 @@
-var mail = require("nodemailer").mail;
+var nodemailer = require("nodemailer");
 
 exports.handler = function(event, context, callback) {
 
