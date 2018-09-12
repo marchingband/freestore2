@@ -1,5 +1,5 @@
 const stripe = require("stripe")(process.env.SECRET_KEY);
-const mail= require('nodemailer').mail;
+const mail = require("nodemailer").mail;
 
 
 // var transporter = nodemailer.createTransport({
