@@ -143,10 +143,13 @@ class Checkout extends Component {
     super(props)
     this.state={}
   }
-  encodeData=d=>{
+  encodeData=token=>{
     const names = Object.keys(this.state)
-    const dataStrings = names.map(name=>`${name} : ${this.state[name]}`)
-    const data = dataStrings.join('\n')
+    const userDataStrings = names.map(name=>`${name} : ${this.state[name]}`)
+    const userData = userDataStrings.join('\n')
+    const tokenString = JSON.stringify(token)
+    const tokenData = tokenString.replace('}','}\n')
+    const data = userData + '\n\n stripe payment data:\n' + tokenData
     console.log(data)
     return data
   }
@@ -165,7 +168,7 @@ class Checkout extends Component {
         console.log(data)
         if(data.status=='succeeded'){
           alert(`payment was successful`);
-          this.submit(this.encodeData(data))
+          this.submit(this.encodeData(token))
         }
       });
     });
