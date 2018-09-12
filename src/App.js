@@ -143,6 +143,13 @@ class Checkout extends Component {
     super(props)
     this.state={}
   }
+  encodeData=d=>{
+    const names = Object.keys(this.state)
+    const dataStrings = names.map(name=>`${name} : ${state[name]}`)
+    const data = dataStrings.join('\n')
+    console.log(data)
+    return data
+  }
   onToken = token => {
     const data = {
       token:token,
@@ -158,7 +165,7 @@ class Checkout extends Component {
         console.log(data)
         if(data.status=='succeeded'){
           alert(`payment was successful`);
-          this.submit()
+          this.submit(this.encodeData(data))
         }
       });
     });
@@ -188,11 +195,11 @@ class Checkout extends Component {
         .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
         .join("&");
   }
-  submit = () => {
+  submit = (data) => {
     fetch("/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: this.encode({ "form-name": "contact", ...this.state })
+      body: this.encode({ "form-name": "purchase", "data":data })
     })
       .then(() => alert("Success!"))
       .catch(error => alert(error));
@@ -205,7 +212,7 @@ const Field = props =>{
   return(
     <p>
       <label>
-        {label} <textarea name={name} value={value} onChange={onChange} />
+        {label} <input type={'text'} name={name} value={value} onChange={onChange} />
       </label>
     </p>
   )
