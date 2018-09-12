@@ -224,13 +224,13 @@ const Field = props =>{
         {name} <textarea name={name} value={value} onChange={onChange} />
       </label>
     </p>
-)
-  }
-  handleChange=(event)=>{
-    this.props.onChange({name:this.props.name,value:event.target.value})
-  }
-
+  )
 }
+  // handleChange=(event)=>{
+  //   this.props.onChange({name:this.props.name,value:event.target.value})
+  // }
+
+// }
 
 const Contents = ({products, onClickAddToCart}) => 
   products.map((product)=>
