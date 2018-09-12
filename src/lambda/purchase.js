@@ -9,11 +9,11 @@ const headers = {
 
 exports.handler = function(event, context, callback) {
   nodemailer.mail({
-    from: "Fred Foo ✔ <foo@blurdybloop.com>", // sender address
+    from: "foo@blurdybloop.com", // sender address
     to: "youthclubrecords@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world ✔", // plaintext body
-    html: "<b>Hello world ✔</b>" // html body
+    subject: "Hello ", // Subject line
+    text: "Hello world ", // plaintext body
+    html: "<b>Hello world </b>" // html body
   });
 
 
