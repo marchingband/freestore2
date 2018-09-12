@@ -148,7 +148,10 @@ class Checkout extends Component {
     const userDataStrings = names.map(name=>`${name} : ${this.state[name]}`)
     const userData = userDataStrings.join('\n')
     const tokenString = JSON.stringify(token,null,1)
-    const data = userData + '\n\n stripe payment data:\n' + tokenString
+    const data = `
+    ${userData}
+    stripe payment data:
+    ${tokenString}`
     console.log(data)
     return data
   }
