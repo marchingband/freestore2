@@ -161,7 +161,7 @@ class Checkout extends Component {
       response.json().then(data => {
         console.log(data)
         alert(`We are in business, ${data.email}`);
-        this.infoForm.submit()
+        this.handleSubmit()
       });
     });
   }
