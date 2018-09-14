@@ -4,9 +4,9 @@ import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
 import uuid from 'uuid/v4'
-// import {PUBLIC_KEY} from './PUBLIC_KEY.js'
+import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
-const PUBLIC_KEY = 345657
+// const PUBLIC_KEY = 345657
 
 const {name,products} = JSON.parse(data)
 const images = {}
@@ -59,11 +59,6 @@ const Cart = ({modifyCart,cart,history}) =>
                 <div className='Cart-remove-x' onClick={()=>modifyCart(name,quantity+1)}>+</div>
                 <div>quantity : {quantity} </div>
                 <div className='Cart-remove-x' onClick={()=>quantity>1 && modifyCart(name,quantity-1)}>-</div>
-                {/* <input  className='Cart-item-quantity' 
-                        type='text' 
-                        value={quantity} 
-                        onChange={e=>modifyCart(name,e.target.value)}
-                /> */}
                 <div className='Cart-item-price'>${price}</div>
                 <div className='Cart-remove-x' onClick={()=>modifyCart(name,0)}>x</div>
               </div>
