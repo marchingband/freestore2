@@ -34,7 +34,7 @@ const Home = ({ cart,history }) =>
       <div className='Store-title'>{name.text}</div>
       <CartIcon cart={cart} history={history}/>
     </div>
-    {products.map(product=><Product product={product} history={history}/>)}
+    {products.map(product=><Product key={id++} product={product} history={history}/>)}
   </div>
 
 const ProductPage = ({ ATC, history, product: {description,price,name,image} }) =>
@@ -48,28 +48,29 @@ const ProductPage = ({ ATC, history, product: {description,price,name,image} }) 
       <div className="Product-description">{description.text}</div>
     </div>
 
-const Cart = ({modifyCart,cart,history}) =>
+const CartLine = ({item:{name,image,price,quantity},modifyCart}) =>
+  <div className='Cart-line' key={id++}>
+    <img className='Cart-item-image' src={images[image]}/>
+    <div className='Cart-item-name'>{name}</div>
+    <div className='Cart-remove-x' onClick={()=>modifyCart(name,quantity+1)}>+</div>
+    <div>quantity : {quantity} </div>
+    <div className='Cart-remove-x' onClick={()=>quantity>1 && modifyCart(name,quantity-1)}>-</div>
+    <div className='Cart-item-price'>${price}</div>
+    <div className='Cart-remove-x' onClick={()=>modifyCart(name,0)}>x</div>
+  </div>
+
+const Cart = ({modifyCart,cart,history}) => 
       <div className='Cart-container'>
         <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
         <div className='Items-container'>
-          {cart.filter(p=>p.quantity>0).map(({name,image,price,quantity}) =>
-              <div className='Cart-line' key={id++}>
-                <img className='Cart-item-image' src={images[image]}/>
-                <div className='Cart-item-name'>{name}</div>
-                <div className='Cart-remove-x' onClick={()=>modifyCart(name,quantity+1)}>+</div>
-                <div>quantity : {quantity} </div>
-                <div className='Cart-remove-x' onClick={()=>quantity>1 && modifyCart(name,quantity-1)}>-</div>
-                <div className='Cart-item-price'>${price}</div>
-                <div className='Cart-remove-x' onClick={()=>modifyCart(name,0)}>x</div>
-              </div>
-          )}
+          {cart.filter(p=>p.quantity>0).map(item => <CartLine key={id++} item={item} modifyCart={modifyCart}/>)}
         </div>
         <div className='Cart-footer'>
           <span className='Cart-footer-total'>TOTAL : ${cart.reduce(totals,0)}</span>
           <span className='Cart-footer-checkout' onClick={()=>history.push('/checkout')}>checkout</span>
         </div>
       </div>
-    
+
 
 class App extends Component {
   constructor(props){
@@ -87,7 +88,7 @@ class App extends Component {
               <Route path='/cart'     render={p=> <Cart {...p} modifyCart={this.modifyCart} cart={Object.values(this.state)} />} />
               <Route path='/checkout' render={p=> <Checkout {...p} />} />
               {products.map(pr=>
-                <Route path={'/'+u(pr.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={pr} />} />)}
+                <Route key={id++} path={'/'+u(pr.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={pr} />} />)}
               <Route render={p=> <Home {...p} cart={Array.from(this.state)}/>} />
             </Switch>
           </div>
