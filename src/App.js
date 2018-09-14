@@ -4,9 +4,9 @@ import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
 import uuid from 'uuid/v4'
-// import {PUBLIC_KEY} from './PUBLIC_KEY.js'
+import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
-const PUBLIC_KEY = 345657
+// const PUBLIC_KEY = 345657
 
 const {name,products} = JSON.parse(data)
 const images = {}
