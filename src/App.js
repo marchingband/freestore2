@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import {BrowserRouter as Router,Route,Link,} from 'react-router-dom'
+import {BrowserRouter as Router,Route,Switch,} from 'react-router-dom'
 import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
@@ -78,12 +78,14 @@ class App extends Component {
       <Router>
         <div className="App">
           <div className="Container">
-            <Route exact path='/'   render={p=> <Home {...p} cart={this.state.cart}/>} />
-            <Route path='/cart'     render={p=> <Cart {...p} RFC={this.RFC} cart={this.state.cart} />} />
-            <Route path='/checkout' render={p=> <Checkout {...p} />} />
-            {products.map(product=>
-            <Route path={'/'+u(product.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={product} />} />
-            )}
+            <Switch>
+              <Route exact path='/'   render={p=> <Home {...p} cart={this.state.cart}/>} />
+              <Route path='/cart'     render={p=> <Cart {...p} RFC={this.RFC} cart={this.state.cart} />} />
+              <Route path='/checkout' render={p=> <Checkout {...p} />} />
+              {products.map(pr=>
+                <Route path={'/'+u(pr.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={pr} />} />)}
+              <Route render={p=> <Home {...p} cart={this.state.cart}/>} />
+            </Switch>
           </div>
         </div>
       </Router>
