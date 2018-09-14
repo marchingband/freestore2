@@ -71,7 +71,7 @@ class Cart extends Component{
       <div className='Cart-container'>
         <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
         <div className='Items-container'>
-          {Object.values(cart).filter(p=>p.quantity>0).map(item => {
+          {cart.filter(p=>p.quantity>0).map(item => {
               const {image,name,price} = item
               return(
               <div className='Cart-line' key={id++}>
@@ -112,7 +112,7 @@ class App extends Component {
           <div className="Container">
             <Switch>
               <Route exact path='/'   render={p=> <Home {...p} cart={Object.values(this.cart)}/>} />
-              <Route path='/cart'     render={p=> <Cart {...p} modifyCart={this.modifyCart} cart={this.cart} />} />
+              <Route path='/cart'     render={p=> <Cart {...p} modifyCart={this.modifyCart} cart={Object.values(this.cart)} />} />
               <Route path='/checkout' render={p=> <Checkout {...p} />} />
               {products.map(pr=>
                 <Route key={id++} path={'/'+u(pr.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={pr} />} />)}
