@@ -37,14 +37,14 @@ const Home = ({ cart,history }) =>
     {products.map(product=><Product product={product} history={history}/>)}
   </div>
 
-const ProductPage = ({ ATC, product: {description,price,name,image} }) =>
+const ProductPage = ({ ATC, history, product: {description,price,name,image} }) =>
     <div className="Product">
       <img className="Product-image"  src={images[image.text]}/>
       <div className="Product-bar">
         <div className="Product-name">{name.text}</div>
         <div className="Product-price">${price.text}</div>
       </div>
-      <div className="Add-to-cart" onClick={()=>ATC({description,price,name,image})}>add to cart</div>
+      <div className="Add-to-cart" onClick={()=>{ATC({description,price,name,image});history.push('/cart')}}>add to cart</div>
       <div className="Product-description">{description.text}</div>
     </div>
 
