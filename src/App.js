@@ -58,7 +58,7 @@ class Cart extends Component{
     cart.forEach(({name},i)=>this.setState(s=>({[name]: s[name] ? s[name]+1 : 1 })))
       // this.state[name] ? this.setState(s=>({[name]:this.state[name]+1})) : this.setState({[name]:1})    })
       // remove duplicate objects ...sigh
-    const _cart = cart.filter((e,i,a)=>a.split(i).filter(ee=>e.name.text==ee.name.txt).length==1)
+    const _cart = cart.filter((e,i,a)=>a.slice(i).filter(ee=>e.name.text==ee.name.txt).length==1)
     return(
       <div className='Cart-container'>
         <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
