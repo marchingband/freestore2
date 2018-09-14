@@ -4,9 +4,9 @@ import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
 import uuid from 'uuid/v4'
-import {PUBLIC_KEY} from './PUBLIC_KEY.js'
+// import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
-// const PUBLIC_KEY = 345657
+const PUBLIC_KEY = 345657
 
 const {name,products} = JSON.parse(data)
 const images = {}
@@ -16,13 +16,13 @@ products.forEach(product=>{
 })
 var id=0;
 
-const totals = (acc,cur) => acc + parseInt(cur.price.text)
+const totals = (acc,cur) => acc + cur.price * cur.quantity
 const remove = (list,i) => list.slice(0,i).concat(list.slice(i+1))
 const u = name => name.replace(/\s/g, '');
 
 const Product = ({history, product: {name, image} }) => 
     <div className="Product">
-      <img onClick={()=>{history.push(`/${u(name.text)}`)}} className="Product-image"  src={images[image.text]}/>
+      <img onClick={()=>{history.push('/'+u(name.text))}} className="Product-image"  src={images[image.text]}/>
       <div className="Product-bar">
         <div className="Product-name">{name.text}</div>
       </div>
@@ -44,32 +44,28 @@ const ProductPage = ({ ATC, history, product: {description,price,name,image} }) 
         <div className="Product-name">{name.text}</div>
         <div className="Product-price">${price.text}</div>
       </div>
-      <div className="Add-to-cart" onClick={()=>{ATC({description,price,name,image});history.push('/cart')}}>add to cart</div>
+      <div className="Add-to-cart" onClick={()=>{ATC(name.text);history.push('/cart')}}>add to cart</div>
       <div className="Product-description">{description.text}</div>
     </div>
 
-class Cart extends Component{
-  constructor(){
-    super()
-    this.state={}
-  }
-  render(){
-    const {RFC,cart,history} = this.props
-    cart.forEach(({name},i)=>this.setState(s=>({[name]: s[name] ? s[name]+1 : 1 })))
-      // this.state[name] ? this.setState(s=>({[name]:this.state[name]+1})) : this.setState({[name]:1})    })
-      // remove duplicate objects ...sigh
-    const _cart = cart.filter((e,i,a)=>a.slice(i).filter(ee=>e.name.text==ee.name.txt).length==1)
-    return(
+const Cart = ({modifyCart,cart,history}) =>
       <div className='Cart-container'>
         <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
         <div className='Items-container'>
-          {_cart.map(({ name,image,price }, i)=>
+          {cart.filter(p=>p.quantity>0).map(({name,image,price,quantity}) =>
               <div className='Cart-line' key={id++}>
-                <img className='Cart-item-image' src={images[image.text]}/>
-                <div className='Cart-item-name'>{name.text}</div>
-                <input className='Cart-item-quantity' type='text' value={this.state[name]} onChange={e=>this.setState({[name]:e.target.value})} />
-                <div className='Cart-item-price'>${price.text}</div>
-                <div className='Cart-remove-x' onClick={()=>RFC(i)}>x</div>
+                <img className='Cart-item-image' src={images[image]}/>
+                <div className='Cart-item-name'>{name}</div>
+                <div className='Cart-remove-x' onClick={()=>modifyCart(name,quantity+1)}>+</div>
+                <div>quantity : {quantity} </div>
+                <div className='Cart-remove-x' onClick={()=>quantity>1 && modifyCart(name,quantity-1)}>-</div>
+                {/* <input  className='Cart-item-quantity' 
+                        type='text' 
+                        value={quantity} 
+                        onChange={e=>modifyCart(name,e.target.value)}
+                /> */}
+                <div className='Cart-item-price'>${price}</div>
+                <div className='Cart-remove-x' onClick={()=>modifyCart(name,0)}>x</div>
               </div>
           )}
         </div>
@@ -78,16 +74,13 @@ class Cart extends Component{
           <span className='Cart-footer-checkout' onClick={()=>history.push('/checkout')}>checkout</span>
         </div>
       </div>
-    )
-  }
-}
+    
 
 class App extends Component {
   constructor(props){
     super(props)
-    this.state={
-      cart:[],
-    }
+    this.state={}
+    products.forEach(p=>this.state[p.name.text]={name:p.name.text,image:p.image.text,price:p.price.text,quantity:0})
   }
   render() {
     return (
@@ -95,25 +88,31 @@ class App extends Component {
         <div className="App">
           <div className="Container">
             <Switch>
-              <Route exact path='/'   render={p=> <Home {...p} cart={this.state.cart}/>} />
-              <Route path='/cart'     render={p=> <Cart {...p} RFC={this.RFC} cart={this.state.cart} />} />
+              <Route exact path='/'   render={p=> <Home {...p} cart={Array.from(this.state)}/>} />
+              <Route path='/cart'     render={p=> <Cart {...p} modifyCart={this.modifyCart} cart={Object.values(this.state)} />} />
               <Route path='/checkout' render={p=> <Checkout {...p} />} />
               {products.map(pr=>
                 <Route path={'/'+u(pr.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={pr} />} />)}
-              <Route render={p=> <Home {...p} cart={this.state.cart}/>} />
+              <Route render={p=> <Home {...p} cart={Array.from(this.state)}/>} />
             </Switch>
           </div>
         </div>
       </Router>
     );
   }
-  ATC=item=>this.setState((s)=>({cart:s.cart.concat([item])}))
-  RFC=index=>this.setState((s)=>({cart:remove(s.cart,index)}))
+  ATC=name=>{
+    const {image,quantity,price} = this.state[name]
+    this.setState({ [name]:{name,image,price,quantity:quantity+1} })
+  }
+  modifyCart=(name,quantity)=>{
+    const {image,price} = this.state[name]
+    this.setState({ [name]:{name,image,price,quantity} })
+  }
 }
 
 const CartIcon = ({cart,history}) => 
   <div className='Cart-icon' onClick={()=>history.push('/cart')}>
-    {cart.length}
+    {cart.reduce((cur,acc)=>acc+cur.quantity,0)}
   </div>
 
 const fields = ['Name','Street Address','City', 'ZIP code / Postal Code', 'Country']
