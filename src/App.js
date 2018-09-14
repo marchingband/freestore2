@@ -48,24 +48,39 @@ const ProductPage = ({ ATC, history, product: {description,price,name,image} }) 
       <div className="Product-description">{description.text}</div>
     </div>
 
-const Cart = ({RFC,cart,history}) =>
-  <div className='Cart-container'>
-    <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
-    <div className='Items-container'>
-      {cart.map(({ name,image,price }, i)=>
-          <div className='Cart-line' key={id++}>
-            <img className='Cart-item-image' src={images[image.text]}/>
-            <div className='Cart-item-name'>{name.text}</div>
-            <div className='Cart-item-price'>${price.text}</div>
-            <div className='Cart-remove-x' onClick={()=>RFC(i)}>x</div>
-          </div>
-      )}
-    </div>
-    <div className='Cart-footer'>
-      <span className='Cart-footer-total'>TOTAL : ${cart.reduce(totals,0)}</span>
-      <span className='Cart-footer-checkout' onClick={()=>history.push('/checkout')}>checkout</span>
-    </div>
-  </div>
+class Cart extends Component{
+  constructor(){
+    super()
+    this.state={}
+  }
+  render(){
+    const {RFC,cart,history} = this.props
+    cart.forEach(({name},i)=>this.setState(s=>({[name]: s[name] ? s[name]+1 : 1 })))
+      // this.state[name] ? this.setState(s=>({[name]:this.state[name]+1})) : this.setState({[name]:1})    })
+      // remove duplicate objects ...sigh
+    const _cart = cart.filter((e,i,a)=>a.split(i).filter(ee=>e.name.text==ee.name.txt).length==1)
+    return(
+      <div className='Cart-container'>
+        <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
+        <div className='Items-container'>
+          {_cart.map(({ name,image,price }, i)=>
+              <div className='Cart-line' key={id++}>
+                <img className='Cart-item-image' src={images[image.text]}/>
+                <div className='Cart-item-name'>{name.text}</div>
+                <input className='Cart-item-quantity' type='text' value={this.state[name]} onChange={e=>this.setState({[name]:e.target.value})} />
+                <div className='Cart-item-price'>${price.text}</div>
+                <div className='Cart-remove-x' onClick={()=>RFC(i)}>x</div>
+              </div>
+          )}
+        </div>
+        <div className='Cart-footer'>
+          <span className='Cart-footer-total'>TOTAL : ${cart.reduce(totals,0)}</span>
+          <span className='Cart-footer-checkout' onClick={()=>history.push('/checkout')}>checkout</span>
+        </div>
+      </div>
+    )
+  }
+}
 
 class App extends Component {
   constructor(props){
