@@ -48,13 +48,36 @@ const ProductPage = ({ ATC, history, product: {description,price,name,image} }) 
       <div className="Product-description">{description.text}</div>
     </div>
 
+class Counter extends Component{
+  constructor(props){
+    super(props)
+    this.state={num:this.props.quantity}
+  }
+  editQuantity(name,quantity){
+    this.props.modifyCart(name,quantity)
+    this.setState({num:quantity})
+  }
+  render(){
+    const {name} = this.props
+    const {num} = this.state
+    return(
+      <div>
+        <div className='Cart-remove-x' onClick={()=>this.editQuantity(name,num+1)}>+</div>
+          <div>quantity : {this.state.num} </div>
+        <div className='Cart-remove-x' onClick={()=>this.editQuantity(name,num-1)}>-</div>
+      </div>
+    );
+  }
+}
+
 const CartLine = ({item:{name,image,price,quantity},modifyCart}) =>
   <div className='Cart-line' key={id++}>
     <img className='Cart-item-image' src={images[image]}/>
     <div className='Cart-item-name'>{name}</div>
-    <div className='Cart-remove-x' onClick={()=>modifyCart(name,quantity+1)}>+</div>
+    <Counter modifyCart={modifyCart} quantity={quantity} name={name} />
+    {/* <div className='Cart-remove-x' onClick={()=>modifyCart(name,quantity+1)}>+</div>
     <div>quantity : {quantity} </div>
-    <div className='Cart-remove-x' onClick={()=>quantity>1 && modifyCart(name,quantity-1)}>-</div>
+    <div className='Cart-remove-x' onClick={()=>quantity>1 && modifyCart(name,quantity-1)}>-</div> */}
     <div className='Cart-item-price'>${price}</div>
     <div className='Cart-remove-x' onClick={()=>modifyCart(name,0)}>x</div>
   </div>
@@ -63,10 +86,10 @@ const Cart = ({modifyCart,cart,history}) =>
       <div className='Cart-container'>
         <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
         <div className='Items-container'>
-          {cart.filter(p=>p.quantity>0).map((item,i) => <CartLine key={i} item={item} modifyCart={modifyCart}/>)}
+          {cart.filter(p=>p.quantity>0).map((item,i) => <CartLine ref={r=>this[`line${i}`]=r} key={i} item={item} modifyCart={modifyCart}/>)}
         </div>
         <div className='Cart-footer'>
-          <span className='Cart-footer-total'>TOTAL : ${cart.reduce(totals,0)}</span>
+          {/* <span className='Cart-footer-total'>TOTAL : ${getTotal(this)}</span> */}
           <span className='Cart-footer-checkout' onClick={()=>history.push('/checkout')}>checkout</span>
         </div>
       </div>
@@ -75,8 +98,8 @@ const Cart = ({modifyCart,cart,history}) =>
 class App extends Component {
   constructor(props){
     super(props)
-    this.state={}
-    products.forEach(p=>this.state[p.name.text]={name:p.name.text,image:p.image.text,price:p.price.text,quantity:0})
+    this.cart={}
+    products.forEach(p=>this.cart[p.name.text]={name:p.name.text,image:p.image.text,price:p.price.text,quantity:0})
   }
   render() {
     return (
@@ -84,12 +107,12 @@ class App extends Component {
         <div className="App">
           <div className="Container">
             <Switch>
-              <Route exact path='/'   render={p=> <Home {...p} cart={Array.from(this.state)}/>} />
-              <Route path='/cart'     render={p=> <Cart {...p} modifyCart={this.modifyCart} cart={Object.values(this.state)} />} />
-              <Route path='/checkout' render={p=> <Checkout {...p} />} />
+              <Route exact path='/'   render={p=> <Home ref={i=>this.home=i} {...p} cart={Object.values(this.cart)}/>} />
+              <Route path='/cart'     render={p=> <Cart ref={i=>this.cart=i} {...p} modifyCart={this.modifyCart} cart={Object.values(this.cart)} />} />
+              <Route path='/checkout' render={p=> <Checkout ref={i=>this.checkout=i} {...p} />} />
               {products.map(pr=>
                 <Route key={id++} path={'/'+u(pr.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={pr} />} />)}
-              <Route render={p=> <Home {...p} cart={Array.from(this.state)}/>} />
+              <Route render={p=> <Home {...p} cart={Object.values(this.cart)}/>} />
             </Switch>
           </div>
         </div>
@@ -97,18 +120,20 @@ class App extends Component {
     );
   }
   ATC=name=>{
-    const {image,quantity,price} = this.state[name]
-    this.setState({ [name]:{name,image,price,quantity:quantity+1} })
+    // const {image,quantity,price} = this.state`[name]
+    // this.setState({ [name]:{name,image,price,quantity:quantity+1} })
+    this.cart[name].quantity++
   }
   modifyCart=(name,quantity)=>{
-    const {image,price} = this.state[name]
-    this.setState({ [name]:{name,image,price,quantity} })
+    // const {image,price} = this.state[name]
+    // this.setState({ [name]:{name,image,price,quantity} })
+    this.cart[name].quantity=quantity
   }
 }
 
 const CartIcon = ({cart,history}) => 
   <div className='Cart-icon' onClick={()=>history.push('/cart')}>
-    {cart.reduce((cur,acc)=>acc+cur.quantity,0)}
+    {cart.reduce((acc,cur)=>acc+cur.quantity,0)}
   </div>
 
 const fields = ['Name','Street Address','City', 'ZIP code / Postal Code', 'Country']
