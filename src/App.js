@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import {BrowserRouter as Router,Route,Switch,} from 'react-router-dom'
+import {BrowserRouter as Router,Route,Switch,Link} from 'react-router-dom'
 import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
@@ -44,7 +44,7 @@ const ProductPage = ({ ATC, history, product: {description,price,name,image} }) 
         <div className="Product-name">{name.text}</div>
         <div className="Product-price">${price.text}</div>
       </div>
-      <div className="Add-to-cart" onClick={()=>{ATC(name.text);history.push('/cart')}}>add to cart</div>
+      <div className="Add-to-cart" onClick={()=>{ATC({description,price,name,image});history.push('/cart')}}>add to cart</div>
       <div className="Product-description">{description.text}</div>
     </div>
 
@@ -61,7 +61,7 @@ class Counter extends Component{
     const {name} = this.props
     const {num} = this.state
     return(
-      <div>
+      <div style={{display:'flex',flexDirection:'row'}}>
         <div className='Cart-remove-x' onClick={()=>this.editQuantity(name,num+1)}>+</div>
           <div>quantity : {this.state.num} </div>
         <div className='Cart-remove-x' onClick={()=>this.editQuantity(name,num-1)}>-</div>
@@ -86,7 +86,7 @@ const Cart = ({modifyCart,cart,history}) =>
       <div className='Cart-container'>
         <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
         <div className='Items-container'>
-          {cart.filter(p=>p.quantity>0).map((item,i) => <CartLine ref={r=>this[`line${i}`]=r} key={i} item={item} modifyCart={modifyCart}/>)}
+          {cart.filter(p=>p.quantity>0).map((item,i) => <CartLine item={item} modifyCart={modifyCart}/>)}
         </div>
         <div className='Cart-footer'>
           {/* <span className='Cart-footer-total'>TOTAL : ${getTotal(this)}</span> */}
@@ -98,8 +98,10 @@ const Cart = ({modifyCart,cart,history}) =>
 class App extends Component {
   constructor(props){
     super(props)
-    this.cart={}
-    products.forEach(p=>this.cart[p.name.text]={name:p.name.text,image:p.image.text,price:p.price.text,quantity:0})
+    this.state={
+      cart:[]
+    }
+    // products.forEach(p=>this.cart[p.name.text]={name:p.name.text,image:p.image.text,price:p.price.text,quantity:0})
   }
   render() {
     return (
@@ -107,8 +109,33 @@ class App extends Component {
         <div className="App">
           <div className="Container">
             <Switch>
-              <Route exact path='/'   render={p=> <Home ref={i=>this.home=i} {...p} cart={Object.values(this.cart)}/>} />
-              <Route path='/cart'     render={p=> <Cart ref={i=>this.cart=i} {...p} modifyCart={this.modifyCart} cart={Object.values(this.cart)} />} />
+              <Route exact path='/' render={p=> <Home {...p} cart={this.state.cart}/>} />
+              <Route path='/cart'     render={p=>{
+                return(
+                  <div className='Cart-container'>
+                    <Link to='/'><div className='Cart-back' >continue shopping</div></Link>
+                    <div className='Items-container'>
+                      {this.state.cart.map((item,i) => {
+                        const {name,price,image,quantity} = item
+                        return(
+                          <div className='Cart-line'>
+                            <img className='Cart-item-image' src={images[image.text]}/>
+                            <div className='Cart-item-name'>{name.text}</div>
+                            <div className='Cart-remove-x' onClick={()=>{this.modCart(i,quantity+1)}}>+</div>
+                            <div>quantity : {item.quantity} </div>
+                            <div className='Cart-remove-x' onClick={()=>{this.modCart(i,quantity-1)}}>-</div>
+                            <div className='Cart-item-price'>${price.text}</div>
+                            <div className='Cart-remove-x' onClick={()=>{this.RFC(i)}}>x</div>
+                          </div>
+                      )})}
+                    </div>
+                    <div className='Cart-footer'>
+                      <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span>
+                      <Link to='/checkout'><span className='Cart-footer-checkout'>checkout</span></Link>
+                    </div>
+                  </div>
+                )}} />
+              
               <Route path='/checkout' render={p=> <Checkout ref={i=>this.checkout=i} {...p} />} />
               {products.map(pr=>
                 <Route key={id++} path={'/'+u(pr.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={pr} />} />)}
@@ -119,15 +146,26 @@ class App extends Component {
       </Router>
     );
   }
-  ATC=name=>{
-    // const {image,quantity,price} = this.state`[name]
-    // this.setState({ [name]:{name,image,price,quantity:quantity+1} })
-    this.cart[name].quantity++
+  ATC=item=>{
+    console.log(item)
+    const _item = {...item,quantity:1}
+    this.setState(s=>({cart:s.cart.concat([_item])}))
   }
-  modifyCart=(name,quantity)=>{
-    // const {image,price} = this.state[name]
-    // this.setState({ [name]:{name,image,price,quantity} })
-    this.cart[name].quantity=quantity
+  RFC=i=>{
+    var {cart}= this.state
+    cart=cart.slice(0,i).concat(cart.slice(i+1))
+    this.setState({cart})
+  }
+  modCart=(index,quantity)=>{
+    var {cart} = this.state
+    cart[index].quantity=quantity
+    this.setState({cart})
+  }
+  getTotal=()=>{
+    const {cart} = this.state
+    var total = 0
+    cart.forEach(p=>total+=p.price.text * p.quantity)
+    return total
   }
 }
 
