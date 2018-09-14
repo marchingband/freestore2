@@ -84,7 +84,7 @@ class App extends Component {
               <Route path='/checkout' render={p=> <Checkout {...p} />} />
               {products.map(pr=>
                 <Route path={'/'+u(pr.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={pr} />} />)}
-              {/* <Route render={p=> <Home {...p} cart={this.state.cart}/>} /> */}
+              <Route render={p=> <Home {...p} cart={this.state.cart}/>} />
             </Switch>
           </div>
         </div>
