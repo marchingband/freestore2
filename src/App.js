@@ -4,9 +4,9 @@ import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
 import uuid from 'uuid/v4'
-// import {PUBLIC_KEY} from './PUBLIC_KEY.js'
+import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
-const PUBLIC_KEY = 345657
+// const PUBLIC_KEY = 345657
 
 const {name,products} = JSON.parse(data)
 const images = {}
@@ -48,40 +48,6 @@ const ProductPage = ({ ATC, history, product: {description,price,name,image} }) 
       <div className="Product-description">{description.text}</div>
     </div>
 
-// class Counter extends Component{
-//   constructor(props){
-//     super(props)
-//     this.state={num:this.props.quantity}
-//   }
-//   editQuantity(name,quantity){
-//     this.props.modifyCart(name,quantity)
-//     this.setState({num:quantity})
-//   }
-//   render(){
-//     const {name} = this.props
-//     const {num} = this.state
-//     return(
-//       <div>
-//         <div className='Cart-remove-x' onClick={()=>this.editQuantity(name,num+1)}>+</div>
-//           <div>quantity : {this.state.num} </div>
-//         <div className='Cart-remove-x' onClick={()=>this.editQuantity(name,num-1)}>-</div>
-//       </div>
-//     );
-//   }
-// }
-
-// const CartLine = ({item:{name,image,price,quantity},modifyCart}) =>
-//   <div className='Cart-line' key={id++}>
-//     <img className='Cart-item-image' src={images[image]}/>
-//     <div className='Cart-item-name'>{name}</div>
-//     <Counter modifyCart={modifyCart} quantity={quantity} name={name} />
-//     {/* <div className='Cart-remove-x' onClick={()=>modifyCart(name,quantity+1)}>+</div>
-//     <div>quantity : {quantity} </div>
-//     <div className='Cart-remove-x' onClick={()=>quantity>1 && modifyCart(name,quantity-1)}>-</div> */}
-//     <div className='Cart-item-price'>${price}</div>
-//     <div className='Cart-remove-x' onClick={()=>modifyCart(name,0)}>x</div>
-//   </div>
-
 class Cart extends Component{
   constructor(props){
     super(props)
@@ -120,7 +86,7 @@ class Cart extends Component{
           )})}
         </div>
         <div className='Cart-footer'>
-          <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span>
+          {/* <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span> */}
           <span className='Cart-footer-checkout' onClick={()=>history.push('/checkout')}>checkout</span>
         </div>
       </div>
@@ -128,25 +94,10 @@ class Cart extends Component{
   }
 }
 
-
-// const Cart = ({modifyCart,cart,history}) => 
-//       <div className='Cart-container'>
-//         <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
-//         <div className='Items-container'>
-//           {cart.filter(p=>p.quantity>0).map((item,i) => <CartLine key={i} item={item} modifyCart={modifyCart}/>)}
-//         </div>
-//         <div className='Cart-footer'>
-//           <span className='Cart-footer-total'>TOTAL : ${getTotal(this)}</span>
-//           <span className='Cart-footer-checkout' onClick={()=>history.push('/checkout')}>checkout</span>
-//         </div>
-//       </div>
-
 const CartIcon = ({cart,history}) => 
   <div className='Cart-icon' onClick={()=>history.push('/cart')}>
     {cart.reduce((acc,cur)=>acc+cur.quantity,0)}
   </div>
-
-
 
 class App extends Component {
   constructor(){
