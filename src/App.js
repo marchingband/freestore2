@@ -4,9 +4,9 @@ import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
 import uuid from 'uuid/v4'
-import {PUBLIC_KEY} from './PUBLIC_KEY.js'
+// import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
-// const PUBLIC_KEY = 345657
+const PUBLIC_KEY = 345657
 
 const {name,products} = JSON.parse(data)
 const images = {}
@@ -86,11 +86,18 @@ class Cart extends Component{
   constructor(props){
     super(props)
     this.state={}
-    props.cart.forEach(p=>this.state[p.name]=p.quantity)
+    Object.values(props.cart).forEach(p=>this.state[p.name]=p.quantity)
   }
   editQuantity=(name,num)=>{
       this.props.modifyCart(name,num)
       this.setState({[name]:num})
+  }
+  getTotal=()=>{
+    var total = 0
+    Object.keys(this.state).forEach(name=>{
+      total += this.state[name] * this.props.cart[name].price
+    })
+    return total
   }
   render(){
     const {cart,history} = this.props
@@ -98,7 +105,7 @@ class Cart extends Component{
       <div className='Cart-container'>
         <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
         <div className='Items-container'>
-          {cart.filter(p=>p.quantity>0).map(item => {
+          {Object.values(cart).filter(p=>p.quantity>0).map(item => {
               const {image,name,price} = item
               return(
               <div className='Cart-line' key={id++}>
@@ -113,7 +120,7 @@ class Cart extends Component{
           )})}
         </div>
         <div className='Cart-footer'>
-          {/* <span className='Cart-footer-total'>TOTAL : ${getTotal(this)}</span> */}
+          <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span>
           <span className='Cart-footer-checkout' onClick={()=>history.push('/checkout')}>checkout</span>
         </div>
       </div>
@@ -146,7 +153,6 @@ class App extends Component {
     super()
     this.cart={}
     products.forEach(p=>this.cart[p.name.text]={name:p.name.text,image:p.image.text,price:p.price.text,quantity:0})
-    this.ATC=this.ATC.bind(this)
   }
   render() {
     return (
@@ -155,7 +161,7 @@ class App extends Component {
           <div className="Container">
             <Switch>
               <Route exact path='/'   render={p=> <Home {...p} cart={Object.values(this.cart)}/>} />
-              <Route path='/cart'     render={p=> <Cart {...p} modifyCart={this.modifyCart} cart={Object.values(this.cart)} />} />
+              <Route path='/cart'     render={p=> <Cart {...p} modifyCart={this.modifyCart} cart={this.cart} />} />
               <Route path='/checkout' render={p=> <Checkout {...p} />} />
               {products.map(pr=>
                 <Route key={id++} path={'/'+u(pr.name.text)} render={p=> <ProductPage {...p} ATC={this.ATC} product={pr} />} />)}
@@ -167,13 +173,9 @@ class App extends Component {
     );
   }
   ATC=name=>{
-    // const {image,quantity,price} = this.state`[name]
-    // this.setState({ [name]:{name,image,price,quantity:quantity+1} })
     this.cart[name].quantity++
   }
   modifyCart=(name,quantity)=>{
-    // const {image,price} = this.state[name]
-    // this.setState({ [name]:{name,image,price,quantity} })
     this.cart[name].quantity=quantity
   }
 }
