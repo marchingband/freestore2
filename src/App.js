@@ -34,7 +34,7 @@ const Home = ({ cart,history }) =>
       <div className='Store-title'>{name.text}</div>
       <CartIcon cart={cart} history={history}/>
     </div>
-    {products.map(product=><Product key={id++} product={product} history={history}/>)}
+    {products.map((pr,i)=><Product key={i} product={pr} history={history}/>)}
   </div>
 
 const ProductPage = ({ ATC, history, product: {description,price,name,image} }) =>
@@ -63,7 +63,7 @@ const Cart = ({modifyCart,cart,history}) =>
       <div className='Cart-container'>
         <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
         <div className='Items-container'>
-          {cart.filter(p=>p.quantity>0).map(item => <CartLine key={id++} item={item} modifyCart={modifyCart}/>)}
+          {cart.filter(p=>p.quantity>0).map((item,i) => <CartLine key={i} item={item} modifyCart={modifyCart}/>)}
         </div>
         <div className='Cart-footer'>
           <span className='Cart-footer-total'>TOTAL : ${cart.reduce(totals,0)}</span>
