@@ -21,6 +21,19 @@
   border-color: aqua;
 }
 
+.Cart-back{
+  align-self: flex-start;
+  cursor: pointer;
+  background-color: #3d3838;
+  border: 1px solid black;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: white;
+  font-size: 15px;
+  padding:10px;
+
+}
+
 .Cart-container {
   width:100%;
   border: 1px solid black;

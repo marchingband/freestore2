@@ -50,7 +50,7 @@ const ProductPage = ({ ATC, history, product: {description,price,name,image} }) 
 
 const Cart = ({RFC,cart,history}) =>
   <div className='Cart-container'>
-    <div onClick={()=>history.push('/')} >continue shopping</div>
+    <div className='Cart-back' onClick={()=>history.push('/')} >continue shopping</div>
     <div className='Items-container'>
       {cart.map(({ name,image,price }, i)=>
           <div className='Cart-line' key={id++}>
