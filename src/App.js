@@ -4,11 +4,14 @@ import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
 import uuid from 'uuid/v4'
+import Dropdown from 'react-dropdown'
+import 'react-dropdown/style.css'
+
 import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
 // const PUBLIC_KEY = 345657
 
-const {storeName,products} = JSON.parse(data)
+const {name,products} = JSON.parse(data)
 const images = {}
 products.forEach(product=>{
   var imageName = product.image.text
@@ -20,14 +23,25 @@ const u = name => name.replace(/\s/g, '');
 class App extends Component {
   constructor(props){
     super(props)
-    this.state={cart:[]}
+    this.state={
+      cart:[],
+      fedexShippingCost:12,
+      uspsShippingCost:10,
+      upsShippingCost:14,
+      shippingCost:0,
+      shippingKind:'',
+    }
   }
 
   get home(){return(
       <div>
         <div className='Top-bar'>
           <div className='Store-title'>
-            {storeName}
+            {name.text}
+            <select>
+              <option selectedValue='poop'>poop</option>
+              <option value='pee'>pee</option>
+            </select>
           </div>
           <Link to='/cart'>
             <div className='Cart-icon'>
@@ -91,20 +105,33 @@ class App extends Component {
   )}
 
   get checkOut(){return(
-    <div className='container'>
+    <div className='checkout-container'>
     <form ref={i=>this.infoForm=i}>
       {fields.map((field,index)=>{
         const stateName = field.split(' ').join('').toLowerCase()
         return(
-          <Field 
+          <div>
+          <input
             key={index}
-            label={field}
+            placeholder={field}
             name={stateName} 
             value={this.state[stateName] || ''} 
             onChange={this.handleChange}/>
+          </div>
       )})}
-    </form>
+    <div className='checkout-shipping-dropdown'>
+    <Dropdown 
+      value={this.state.shippingKind || null}
+      options={[{label:`USPS ($ ${this.state.uspsShippingCost})`  ,value:this.state.uspsShippingCost},
+                {label:`UPS ($ ${this.state.upsShippingCost})`    ,value:this.state.upsShippingCost},
+                {label:`FEDEX ($ ${this.state.fedexShippingCost})`,value:this.state.fedexShippingCost}]}
+      onChange={(e)=>this.setState({shippingCost:e.value,shippingKind:e.label}) } 
+      placeholder="Select Shipping" />
+    </div>
+    <div>{"total with shipping : $" + (this.getTotal()+this.state.shippingCost).toFixed(2)}</div>
+    <div>{"total with taxes    : $" + ((this.getTotal()+this.state.shippingCost)*1.15).toFixed(2)}</div>
     <StripeCheckout token={this.onToken} stripeKey={PUBLIC_KEY}/>      
+    </form>
   </div>
   )}
 
@@ -128,7 +155,6 @@ class App extends Component {
     );
   }
   ATC=item=>{
-    // console.log(item)
     const _item = {...item,quantity:1}
     this.setState(s=>({cart:s.cart.concat([_item])}))
   }
@@ -147,6 +173,12 @@ class App extends Component {
     var total = 0
     cart.forEach(p=>total+=p.price.text * p.quantity)
     return total
+  }
+  getTotalWithShipping=(shipping)=>{
+    if(shipping=='USPS'){return this.getTotal()+10}
+    if(shipping=='UPS'){return this.getTotal()+14}
+    if(shipping=='FEDEX'){return this.getTotal()+12}
+    return this.getTotal()
   }
   encodeData=token=>{
     const names = Object.keys(this.state)
@@ -194,14 +226,17 @@ class App extends Component {
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 }
 
-const fields = ['Name','Street Address','City', 'ZIP code / Postal Code', 'Country']
+const fields = ['Name','Street Address','City', 'State/Province','ZIP code / Postal Code', 'Country']
 
-const Field = ({label,name,value,onChange}) =>
-  <p>
-    <label>
-      {label} <input type={'text'} name={name} value={value} onChange={onChange} />
-    </label>
-  </p>
+// const Field = ({label,name,value,onChange}) =>
+//   // <p>
+//   //   <label>
+//   //     {label} 
+//       <input type={'text'} name={name} value={value} onChange={onChange} 
+//       placeholder={name}
+//       />
+//   //   </label>
+//   // </p>
 
 
 // class Checkout extends Component {
