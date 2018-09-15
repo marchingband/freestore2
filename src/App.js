@@ -8,7 +8,7 @@ import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
 // const PUBLIC_KEY = 345657
 
-const {name,products} = JSON.parse(data)
+const {storeName,products} = JSON.parse(data)
 const images = {}
 products.forEach(product=>{
   var imageName = product.image.text
@@ -20,7 +20,7 @@ const u = name => name.replace(/\s/g, '');
 const Home = ({ cart,history }) =>
   <div>
     <div className='Top-bar'>
-      <div className='Store-title'>{name.text}</div>
+      <div className='Store-title'>{storeName.text}</div>
       <CartIcon cart={cart} history={history}/>
     </div>
     {products.map((pr,i)=><Product key={i} product={pr} history={history}/>)}
@@ -28,7 +28,10 @@ const Home = ({ cart,history }) =>
 
 const Product = ({history, product: {name, image} }) => 
     <div className="Product">
-      <img onClick={()=>{history.push('/'+u(name.text))}} className="Product-image"  src={images[image.text]}/>
+      <Link to={'/'+u(name.text)}>
+        <img  className="Product-image"  src={images[image.text]}/>
+      </Link>
+      {/* <img onClick={()=>{history.push('/'+u(name.text))}} className="Product-image"  src={images[image.text]}/> */}
       <div className="Product-bar">
         <div className="Product-name">{name.text}</div>
       </div>
@@ -45,10 +48,10 @@ const ProductPage = ({ ATC, history, product: {description,price,name,image} }) 
       <div className="Product-description">{description.text}</div>
     </div>
 
-const CartIcon = ({cart,history}) => 
-  <div className='Cart-icon' onClick={()=>history.push('/cart')}>
+const CartIcon = ({cart}) => 
+  <Link to='/cart'><div className='Cart-icon'>
     {cart.reduce((acc,cur)=>acc+cur.quantity,0)}
-  </div>
+  </div></Link>
 
 const Field = ({label,name,value,onChange}) =>
   <p>
@@ -63,41 +66,75 @@ class App extends Component {
     super(props)
     this.state={cart:[]}
   }
+  get home(){return(
+      <div>
+        <div className='Top-bar'>
+          <div className='Store-title'>
+            {storeName}
+          </div>
+          <CartIcon cart={this.state.cart} />
+        </div>
+        {products.map(p=><Product product={p}/>)}
+      </div>)}
+  
+  get productPages(){return(
+    products.map(({description,price,name,image},i)=>
+    ({
+      path:name.text,
+      html:
+        <div className="Product">
+          <img className="Product-image"  src={images[image.text]}/>
+          <div className="Product-bar">
+            <div className="Product-name">{name.text}</div>
+            <div className="Product-price">${price.text}</div>
+          </div>
+          <Link to='/cart'><div className="Add-to-cart" onClick={()=>{this.ATC(products[i])}}>
+              add to cart
+          </div></Link>
+          <div className="Product-description">{description.text}</div>
+        </div>
+    })
+  ))}
+
+  get cart(){return(
+    <div className='Cart-container'>
+      <Link to='/'><div className='Cart-back' >continue shopping</div></Link>
+      <div className='Items-container'>
+      {this.state.cart.map(({name,price,image,quantity},i) => 
+          <div className='Cart-line'>
+            <img className='Cart-item-image' src={images[image.text]}/>
+            <div className='Cart-item-name'>{name.text}</div>
+            <div className='Cart-remove-x' onClick={()=>{this.modCart(i,quantity+1)}}>+</div>
+            <div>quantity : {quantity} </div>
+            <div className='Cart-remove-x' onClick={()=>{quantity>1&&this.modCart(i,quantity-1)}}>-</div>
+            <div className='Cart-item-price'>${price.text}</div>
+            <div className='Cart-remove-x' onClick={()=>{this.RFC(i)}}>x</div>
+          </div>
+      )}
+      </div>
+      <div className='Cart-footer'>
+        <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span>
+        <Link to='/checkout'><span className='Cart-footer-checkout'>checkout</span></Link>
+      </div>
+  </div>
+  )}
+
   render() {
     return (
       <Router>
         <div className="App">
           <div className="Container">
             <Switch>
-              <Route exact path='/' render={p=> <Home {...p} cart={this.state.cart}/>} />
-              <Route path='/checkout' render={p=> <Checkout ref={i=>this.checkout=i} {...p} />} />
-              {products.map(pr=>
-                <Route path={'/'+u(pr.name.text)} render={p=><ProductPage {...p} ATC={this.ATC} product={pr}/>}/>)}
-              <Route path='/cart' render={p=>
-                <div className='Cart-container'>
-                  <Link to='/'><div className='Cart-back' >continue shopping</div></Link>
-                  <div className='Items-container'>
-                    {this.state.cart.map((item,i) => {
-                      const {name,price,image,quantity} = item
-                      return(
-                        <div className='Cart-line'>
-                          <img className='Cart-item-image' src={images[image.text]}/>
-                          <div className='Cart-item-name'>{name.text}</div>
-                          <div className='Cart-remove-x' onClick={()=>{this.modCart(i,quantity+1)}}>+</div>
-                          <div>quantity : {item.quantity} </div>
-                          <div className='Cart-remove-x' onClick={()=>{this.modCart(i,quantity-1)}}>-</div>
-                          <div className='Cart-item-price'>${price.text}</div>
-                          <div className='Cart-remove-x' onClick={()=>{this.RFC(i)}}>x</div>
-                        </div>
-                    )})}
-                  </div>
-                  <div className='Cart-footer'>
-                    <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span>
-                    <Link to='/checkout'><span className='Cart-footer-checkout'>checkout</span></Link>
-                  </div>
-                </div>
-              }/>
-  <Route render={p=> <Home {...p} cart={Object.values(this.cart)}/>} />
+              <Route exact path='/'   render={_=> this.home} />
+              <Route path='/checkout' render={props=> <Checkout {...props} />} />
+              <Route path='/cart'     render={_=> this.cart} />
+              {this.productPages.map(page=><Route path={'/'+u(page.path)} render={p=>page.html}/>)}
+              {/* <Route path='/cart'     render={_=> this.renderCart()}/> */}
+              {/* <Route exact path='/'   render={p=> this.test} /> */}
+              {/* <Home {...p} cart={this.state.cart}/>} /> */}
+              {/* {products.map(pr=>
+              <Route path={'/'+u(pr.name.text)} render={p=><ProductPage {...p} ATC={this.ATC} product={pr}/>}/>)} */}
+              {/* <Route render={p=> <Home {...p} cart={Object.values(this.cart)}/>} /> */}
             </Switch>
           </div>
         </div>
@@ -125,6 +162,30 @@ class App extends Component {
     cart.forEach(p=>total+=p.price.text * p.quantity)
     return total
   }
+  renderCart=()=>
+    <div className='Cart-container'>
+    <Link to='/'><div className='Cart-back' >continue shopping</div></Link>
+    <div className='Items-container'>
+      {this.state.cart.map((item,i) => {
+        const {name,price,image,quantity} = item
+        return(
+          <div className='Cart-line'>
+            <img className='Cart-item-image' src={images[image.text]}/>
+            <div className='Cart-item-name'>{name.text}</div>
+            <div className='Cart-remove-x' onClick={()=>{this.modCart(i,quantity+1)}}>+</div>
+            <div>quantity : {item.quantity} </div>
+            <div className='Cart-remove-x' onClick={()=>{quantity>1&&this.modCart(i,quantity-1)}}>-</div>
+            <div className='Cart-item-price'>${price.text}</div>
+            <div className='Cart-remove-x' onClick={()=>{this.RFC(i)}}>x</div>
+          </div>
+      )})}
+    </div>
+    <div className='Cart-footer'>
+      <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span>
+      <Link to='/checkout'><span className='Cart-footer-checkout'>checkout</span></Link>
+    </div>
+  </div>
+
 }
 
 const fields = ['Name','Street Address','City', 'ZIP code / Postal Code', 'Country']
