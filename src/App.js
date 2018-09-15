@@ -11,7 +11,7 @@ import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
 // const PUBLIC_KEY = 345657
 
-const {name,products} = JSON.parse(data)
+const {storeName,products} = JSON.parse(data)
 const images = {}
 products.forEach(product=>{
   var imageName = product.image.text
@@ -37,7 +37,7 @@ class App extends Component {
       <div>
         <div className='Top-bar'>
           <div className='Store-title'>
-            {name.text}
+            {storeName}
             <select>
               <option selectedValue='poop'>poop</option>
               <option value='pee'>pee</option>
@@ -73,7 +73,14 @@ class App extends Component {
             <div className="Product-name">{name.text}</div>
             <div className="Product-price">${price.text}</div>
           </div>
-          <Link to='/cart'><div className="Add-to-cart" onClick={()=>{this.ATC(products[i])}}>
+          <Dropdown 
+            value={this.state[name.text] || null}
+            options={[{label:'red',value:2,test:'yes'},
+                      {label:'green',value:3,test:'yes'},
+                      {label:'blue',value:4,test:'yes'}]}
+            onChange={(e)=>{console.log(e.test);this.setState({[name.text]:e.label}) } }
+            placeholder="Select Color" />
+          <Link to='/cart'><div className="Add-to-cart" onClick={()=>{this.ATC(products[i],this.state[name.text])}}>
               add to cart
           </div></Link>
           <div className="Product-description">{description.text}</div>
@@ -85,10 +92,11 @@ class App extends Component {
     <div className='Cart-container'>
       <Link to='/'><div className='Cart-back' >continue shopping</div></Link>
       <div className='Items-container'>
-      {this.state.cart.map(({name,price,image,quantity},i) => 
+      {this.state.cart.map(({name,price,image,quantity,options},i) => 
           <div className='Cart-line'>
             <img className='Cart-item-image' src={images[image.text]}/>
             <div className='Cart-item-name'>{name.text}</div>
+            {options && <div className='Cart-item-options'>{options}</div>}
             <div className='Cart-remove-x' onClick={()=>{this.modCart(i,quantity+1)}}>+</div>
             <div>quantity : {quantity} </div>
             <div className='Cart-remove-x' onClick={()=>{quantity>1&&this.modCart(i,quantity-1)}}>-</div>
@@ -154,8 +162,8 @@ class App extends Component {
       </Router>
     );
   }
-  ATC=item=>{
-    const _item = {...item,quantity:1}
+  ATC=(item,options=null)=>{
+    const _item = {...item,quantity:1,options}
     this.setState(s=>({cart:s.cart.concat([_item])}))
   }
   RFC=i=>{

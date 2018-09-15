@@ -75,6 +75,10 @@
   flex: 10;
 }
 
+.Cart-item-options{
+  flex: 10;
+}
+
 .Cart-item-price{
   flex: 2
 }
