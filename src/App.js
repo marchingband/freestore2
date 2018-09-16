@@ -1,4 +1,4 @@
-import React, { Component, PureComponent } from 'react';
+import React, { Component } from 'react';
 import {BrowserRouter as Router,Route,Switch,Link} from 'react-router-dom'
 import StripeCheckout from "react-stripe-checkout"
 import './App.css';
@@ -6,11 +6,20 @@ import {data} from './store.js';
 import uuid from 'uuid/v4'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
+import Carousel from 'nuka-carousel'
 
 import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
-// const PUBLIC_KEY = 345657
 
+// const PUBLIC_KEY = 345657
+const carouselSetting ={
+  wrapAround : true,
+  framePadding : '15px',
+  renderBottomCenterControls : ()=>{},
+  renderCenterLeftControls   : ({previousSlide})=><div style={{cursor:'pointer'}} onClick={previousSlide}>{'<'}</div>,
+  renderCenterRightControls  : ({nextSlide})=><div style={{cursor:'pointer'}} onClick={nextSlide}>{'>'}</div>
+
+}
 const {storeName,products} = JSON.parse(data)
 const images = {}
 products.forEach(product=>{
@@ -18,6 +27,7 @@ products.forEach(product=>{
   images[imageName]=require('./images/'+imageName)  
 })
 
+const LINK = x => <Link {...x} style={{textDecoration:'none'}}/>
 const u = name => name.replace(/\s/g, '');
 
 class App extends Component {
@@ -43,24 +53,24 @@ class App extends Component {
               <option value='pee'>pee</option>
             </select>
           </div>
-          <Link to='/cart'>
+          <LINK to='/cart'>
             <div className='Cart-icon'>
               {this.state.cart.reduce((acc,cur)=>acc+cur.quantity,0)}
             </div>
-          </Link>
+          </LINK>
         </div>
         {products.map(({name,image})=>
           <div className="Product">
-            <Link to={'/'+u(name.text)}>
+            <LINK to={'/'+u(name.text)}>
               <img  className="Product-image"  src={images[image.text]}/>
-            </Link>
+            </LINK>
             <div className="Product-bar">
               <div className="Product-name">{name.text}</div>
             </div>
           </div>
         )}
       </div>)}
-  
+
   get productPages(){return(
     products.map(({description,price,name,image},i)=>
     ({
@@ -68,7 +78,13 @@ class App extends Component {
         name.text,
       html:
         <div className="Product">
-          <img className="Product-image"  src={images[image.text]}/>
+          <Carousel {...carouselSetting}>
+            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
+            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
+            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
+            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
+            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
+          </Carousel>
           <div className="Product-bar">
             <div className="Product-name">{name.text}</div>
             <div className="Product-price">${price.text}</div>
@@ -80,9 +96,9 @@ class App extends Component {
                       {label:'blue',value:4,test:'yes'}]}
             onChange={(e)=>{console.log(e.test);this.setState({[name.text]:e.label}) } }
             placeholder="Select Color" />
-          <Link to='/cart'><div className="Add-to-cart" onClick={()=>{this.ATC(products[i],this.state[name.text])}}>
+          <LINK to='/cart'><div className="Add-to-cart" onClick={()=>{this.ATC(products[i],this.state[name.text])}}>
               add to cart
-          </div></Link>
+          </div></LINK>
           <div className="Product-description">{description.text}</div>
         </div>
     })
@@ -90,7 +106,7 @@ class App extends Component {
 
   get cart(){return(
     <div className='Cart-container'>
-      <Link to='/'><div className='Cart-back' >continue shopping</div></Link>
+      <LINK to='/'><div className='Cart-back' >continue shopping</div></LINK>
       <div className='Items-container'>
       {this.state.cart.map(({name,price,image,quantity,options},i) => 
           <div className='Cart-line'>
@@ -107,7 +123,7 @@ class App extends Component {
       </div>
       <div className='Cart-footer'>
         <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span>
-        <Link to='/checkout'><span className='Cart-footer-checkout'>checkout</span></Link>
+        <LINK to='/checkout'><span className='Cart-footer-checkout'>checkout</span></LINK>
       </div>
   </div>
   )}

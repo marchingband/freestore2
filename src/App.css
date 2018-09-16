@@ -21,6 +21,10 @@
   border-color: aqua;
 }
 
+/* .Carousel-Chevron {
+  cursor: pointer;
+} */
+
 .Cart-back{
   align-self: flex-start;
   cursor: pointer;
@@ -170,6 +174,12 @@ input{
 }
 
 .Product-image {
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid lightgray; 
+}
+
+.Product-Page-image {
   width: 100%;
   cursor: pointer;
   border: 1px solid lightgray; 
