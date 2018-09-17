@@ -140,28 +140,37 @@
 
 .Gallery-Container{
   position: relative;
+  margin-bottom: 10px
 }
 
 .Gallery-Image{
-  width:90%;
+  width:92%;
   border: 1px solid lightgray;
 }
 
 .Gallery-Left-Nav-Icon{
+  /* border: 1px solid lightgray; */
+
   position:relative;
   text-align: left;
   top:50%;
   user-select: none;
+  transform: translate(0, -100%);
 }
 
 .Gallery-Right-Nav-Icon{
+  /* border: 1px solid lightgray; */
+
   position:relative;
   text-align: right;
   top:50%;
-  user-select: none; 
+  user-select: none;
+  transform: translate(0, -100%);
 }
 
 .Gallery-Left-Nav{
+  /* border: 1px solid lightgray; */
+
   position: absolute;
   width:10%;
   height:100%;
@@ -171,6 +180,9 @@
 }
 
 .Gallery-Right-Nav{
+  /* border: 1px solid lightgray; */
+
+
   position: absolute;
   width:10%;
   height:100%;
