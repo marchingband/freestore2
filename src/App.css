@@ -14,16 +14,16 @@
   color: white;
   font-size: 15px;
   padding:10px;
-
+  user-select: none;
 }
 
 .Add-to-cart:hover {
   border-color: aqua;
 }
 
-/* .Carousel-Chevron {
+.Carousel-Chevron {
   cursor: pointer;
-} */
+}
 
 .Cart-back{
   align-self: flex-start;
@@ -136,6 +136,31 @@
 .Container {
   width:100%;
   margin: 0 auto;
+}
+
+.Gallery-Container{
+  position: relative;
+}
+
+.Gallery-Image{
+  width:90%;
+  border: 1px solid lightgray;
+}
+
+.Gallery-Left-Nav{
+  position: absolute;
+  left:0;
+  top:50%;
+  cursor: pointer;
+  user-select: none;
+}
+
+.Gallery-Right-Nav{
+  cursor: pointer;
+  position: absolute;
+  right:0;
+  top:50%;
+  user-select: none;
 }
 
 input{

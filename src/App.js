@@ -6,20 +6,11 @@ import {data} from './store.js';
 import uuid from 'uuid/v4'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
-import Carousel from 'nuka-carousel'
 
 import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
 
 // const PUBLIC_KEY = 345657
-const carouselSetting ={
-  wrapAround : true,
-  framePadding : '15px',
-  renderBottomCenterControls : ()=>{},
-  renderCenterLeftControls   : ({previousSlide})=><div style={{cursor:'pointer'}} onClick={previousSlide}>{'<'}</div>,
-  renderCenterRightControls  : ({nextSlide})=><div style={{cursor:'pointer'}} onClick={nextSlide}>{'>'}</div>
-
-}
 const {storeName,products} = JSON.parse(data)
 const images = {}
 products.forEach(product=>{
@@ -29,6 +20,26 @@ products.forEach(product=>{
 
 const LINK = x => <Link {...x} style={{textDecoration:'none'}}/>
 const u = name => name.replace(/\s/g, '');
+
+class Gallery extends Component{
+  constructor(){
+    super()
+    this.state={view:0}
+  }
+  render(){
+    const {imageList} = this.props
+    const {view} = this.state
+    return(
+      <div className='Gallery-Container'>
+        <div className='Gallery-Left-Nav' onClick={this.handleClickLeft}>{'<'}</div>
+        <img className='Gallery-Image' src={images[imageList[view]]}/>
+        <div className='Gallery-Right-Nav' onClick={this.handleClickRight}>{'>'}</div>
+      </div>
+    )
+  }
+  handleClickLeft=()=> this.setState(s=>({view: s.view<=0 ? this.props.imageList.length-1 : s.view-1}))
+  handleClickRight=()=>this.setState(s=>({view: s.view>=this.props.imageList.length-1 ? 0 : s.view+1}))
+}
 
 class App extends Component {
   constructor(props){
@@ -78,13 +89,7 @@ class App extends Component {
         name.text,
       html:
         <div className="Product">
-          <Carousel {...carouselSetting}>
-            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
-            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
-            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
-            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
-            <div><img className="Product-Page-image"  src={images[image.text]}/></div>
-          </Carousel>
+          <Gallery imageList={[image.text,products[0].image.text,products[1].image.text]}/>
           <div className="Product-bar">
             <div className="Product-name">{name.text}</div>
             <div className="Product-price">${price.text}</div>
