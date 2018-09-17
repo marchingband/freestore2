@@ -4,13 +4,12 @@ import StripeCheckout from "react-stripe-checkout"
 import './App.css';
 import {data} from './store.js';
 import uuid from 'uuid/v4'
-import Dropdown from 'react-dropdown'
-import 'react-dropdown/style.css'
 
 import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
 
 // const PUBLIC_KEY = 345657
+const SELECT_HEIGHT = 30
 const {storeName,products} = JSON.parse(data)
 const images = {}
 products.forEach(product=>{
@@ -24,7 +23,9 @@ const u = name => name.replace(/\s/g, '');
 class Gallery extends Component{
   constructor(){
     super()
-    this.state={view:0}
+    this.state={
+      view:0
+    }
   }
   render(){
     const {imageList} = this.props
@@ -45,6 +46,36 @@ class Gallery extends Component{
   handleClickRight=()=>this.setState(s=>({view: s.view>=this.props.imageList.length-1 ? 0 : s.view+1}))
 }
 
+class Select extends Component{
+  constructor(){
+    super()
+    this.state={open:false,selection:0}
+  }
+  render(){
+    const {options,onChange} = this.props
+    const {open,selection} = this.state
+    return(
+      <div className='Select-Container'>
+        <div className='Select-Main' onClick={()=>this.setState(s=>({open:!s.open})) } >
+          <p className='Select-Text'>{options[selection].label||options[selection]}</p>
+        </div>
+        {open && 
+          options.map((option,i)=>
+            <div 
+              className='Select-Dropdown' 
+              style={{top:(i+1)*SELECT_HEIGHT+'px',backgroundColor:i==selection?'grey':'white'}}
+              onClick={()=>{
+                this.setState({selection:i,open:false});
+                onChange(options[i])}}
+            >
+              <p className='Select-Text'>{option.label || option}</p>
+            </div>)
+        }
+      </div>
+    )
+  }
+}
+
 class App extends Component {
   constructor(props){
     super(props)
@@ -63,10 +94,6 @@ class App extends Component {
         <div className='Top-bar'>
           <div className='Store-title'>
             {storeName}
-            <select>
-              <option selectedValue='poop'>poop</option>
-              <option value='pee'>pee</option>
-            </select>
           </div>
           <LINK to='/cart'>
             <div className='Cart-icon'>
@@ -98,13 +125,7 @@ class App extends Component {
             <div className="Product-name">{name.text}</div>
             <div className="Product-price">${price.text}</div>
           </div>
-          <Dropdown 
-            value={this.state[name.text] || null}
-            options={[{label:'red',value:2,test:'yes'},
-                      {label:'green',value:3,test:'yes'},
-                      {label:'blue',value:4,test:'yes'}]}
-            onChange={(e)=>{console.log(e.test);this.setState({[name.text]:e.label}) } }
-            placeholder="Select Color" />
+          <Select options={['One','Two','Three','four']} onChange={(e)=>this.setState({[name.text]:e})}/>
           <LINK to='/cart'><div className="Add-to-cart" onClick={()=>{this.ATC(products[i],this.state[name.text])}}>
               add to cart
           </div></LINK>
@@ -131,8 +152,8 @@ class App extends Component {
       )}
       </div>
       <div className='Cart-footer'>
-        <span className='Cart-footer-total'>TOTAL : ${this.getTotal()}</span>
-        <LINK to='/checkout'><span className='Cart-footer-checkout'>checkout</span></LINK>
+        <div className='Cart-footer-total'>TOTAL : ${this.getTotal()}</div>
+        <LINK to='/checkout'><div className='Cart-footer-checkout'>checkout</div></LINK>
       </div>
   </div>
   )}
@@ -153,13 +174,19 @@ class App extends Component {
           </div>
       )})}
     <div className='checkout-shipping-dropdown'>
-    <Dropdown 
+    {/* <Dropdown 
       value={this.state.shippingKind || null}
       options={[{label:`USPS ($ ${this.state.uspsShippingCost})`  ,value:this.state.uspsShippingCost},
                 {label:`UPS ($ ${this.state.upsShippingCost})`    ,value:this.state.upsShippingCost},
                 {label:`FEDEX ($ ${this.state.fedexShippingCost})`,value:this.state.fedexShippingCost}]}
       onChange={(e)=>this.setState({shippingCost:e.value,shippingKind:e.label}) } 
-      placeholder="Select Shipping" />
+      placeholder="Select Shipping" /> */}
+    <Select 
+      options={[{label:`USPS ($ ${this.state.uspsShippingCost})`  ,value:this.state.uspsShippingCost},
+                {label:`UPS ($ ${this.state.upsShippingCost})`    ,value:this.state.upsShippingCost},
+                {label:`FEDEX ($ ${this.state.fedexShippingCost})`,value:this.state.fedexShippingCost}]}
+      onChange={(e)=>this.setState({shippingCost:e.value,shippingKind:e.label}) } 
+                />
     </div>
     <div>{"total with shipping : $" + (this.getTotal()+this.state.shippingCost).toFixed(2)}</div>
     <div>{"total with taxes    : $" + ((this.getTotal()+this.state.shippingCost)*1.15).toFixed(2)}</div>
