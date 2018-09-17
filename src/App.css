@@ -147,20 +147,36 @@
   border: 1px solid lightgray;
 }
 
-.Gallery-Left-Nav{
-  position: absolute;
-  left:0;
+.Gallery-Left-Nav-Icon{
+  position:relative;
+  text-align: left;
   top:50%;
-  cursor: pointer;
   user-select: none;
 }
 
-.Gallery-Right-Nav{
-  cursor: pointer;
-  position: absolute;
-  right:0;
+.Gallery-Right-Nav-Icon{
+  position:relative;
+  text-align: right;
   top:50%;
-  user-select: none;
+  user-select: none; 
+}
+
+.Gallery-Left-Nav{
+  position: absolute;
+  width:10%;
+  height:100%;
+  top:0;
+  left:0;
+  cursor: pointer;
+}
+
+.Gallery-Right-Nav{
+  position: absolute;
+  width:10%;
+  height:100%;
+  top:0;
+  right:0;
+  cursor: pointer;
 }
 
 input{

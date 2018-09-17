@@ -31,9 +31,13 @@ class Gallery extends Component{
     const {view} = this.state
     return(
       <div className='Gallery-Container'>
-        <div className='Gallery-Left-Nav' onClick={this.handleClickLeft}>{'<'}</div>
+        <div className='Gallery-Left-Nav' onClick={this.handleClickLeft}>
+          <p className='Gallery-Left-Nav-Icon'>{'<'}</p>
+        </div>
         <img className='Gallery-Image' src={images[imageList[view]]}/>
-        <div className='Gallery-Right-Nav' onClick={this.handleClickRight}>{'>'}</div>
+        <div className='Gallery-Right-Nav' onClick={this.handleClickRight}>
+          <p className='Gallery-Right-Nav-Icon'>{'>'}</p>
+        </div>
       </div>
     )
   }
