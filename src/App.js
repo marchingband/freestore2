@@ -58,7 +58,7 @@ class Select extends Component{
       <div className='Select-Container'>
         <div className='Select-Main' onClick={()=>this.setState(s=>({open:!s.open})) } >
           <div className='Select-Text'>{options[selection].label||options[selection]}</div>
-          <span className='Select-Chevron' style={{transform: `rotate(${open?-90:90}deg)`}}>{'<'}</span>
+          <span className='Select-Chevron' style={{transform: `rotate(${open?90:-90}deg)`}}>{'<'}</span>
         </div>
         {open && 
           options.map((option,i)=>
