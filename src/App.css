@@ -143,6 +143,10 @@
   margin: 0 auto;
 }
 
+div {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 .Gallery-Container{
   position: relative;
   margin-bottom: 10px
