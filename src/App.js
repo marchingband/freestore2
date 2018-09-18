@@ -34,23 +34,20 @@ class Gallery extends Component{
     const {view} = this.state
     return(
       <div className='Gallery-Container'>
-        <div className='Gallery-Left-Nav' onClick={this.handleClickLeft}>
-          <p className='Gallery-Left-Nav-Icon'
-             style={{opacity:view==0?.5:1}}
-          >{'<'}</p>
-        </div>
-        <img className='Gallery-Image' src={images[imageList[view]]}/>
-        <div className='Gallery-Right-Nav' onClick={this.handleClickRight}>
-          <p className='Gallery-Right-Nav-Icon'
-             style={{opacity:view==imageList.length-1?.5:1}}
-          >{'>'}</p>
+        <div className='Gallery-Image-Container'>
+          <div className='Gallery-Left-Nav' onClick={this.handleClickLeft}>
+            <p className='Gallery-Left-Nav-Icon'
+              style={{opacity:view==0?.5:1}}
+            >{'<'}</p>
+          </div>
+          <img className='Gallery-Image' src={images[imageList[view]]}/>
+          <div className='Gallery-Right-Nav' onClick={this.handleClickRight}>
+            <p className='Gallery-Right-Nav-Icon'
+              style={{opacity:view==imageList.length-1?.5:1}}
+            >{'>'}</p>
+          </div>
         </div>
         <div>{[...imageList].map((_,i)=><div className='Select-Bullets' style={{fontSize:i==view?'10px':'8px' ,opacity:i==view?0.4:1}}> {' O '} </div>)}</div>
-        {/* <div  className='Select-Bullets' 
-              style={{letterSpacing:imageList.length*2>20?'2px':imageList.length>10?'5px':'10px'}}
-        >
-          {[...imageList,...imageList].map((_,i)=>i==view?'O':'o' )}
-        </div> */}
       </div>
     )
   }
