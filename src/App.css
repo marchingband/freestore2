@@ -276,6 +276,20 @@ input{
   z-index: 5;
 }
 
+.Select-Chevron{
+  position: absolute;
+  height:18px;
+  width:18px;
+  top:15%;
+  right:10px;
+  user-select: none;
+  font-weight: 900;
+  font-size: 13px;
+  border: 1px solid black;
+  border-radius: 100px;
+  
+}
+
 .Select-Dropdown:hover {
   border-color: "grey";
 }
@@ -296,9 +310,10 @@ input{
 }
 
 .Select-Text{
-  position: relative;;
-  top:-35%;
+  position: relative;
+  top:15%;
   user-select: none;
+  display: inline;
 }
 
 .Store-title {

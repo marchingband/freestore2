@@ -57,7 +57,8 @@ class Select extends Component{
     return(
       <div className='Select-Container'>
         <div className='Select-Main' onClick={()=>this.setState(s=>({open:!s.open})) } >
-          <p className='Select-Text'>{options[selection].label||options[selection]}</p>
+          <div className='Select-Text'>{options[selection].label||options[selection]}</div>
+          <span className='Select-Chevron' style={{transform: `rotate(${open?-90:90}deg)`}}>{'<'}</span>
         </div>
         {open && 
           options.map((option,i)=>
@@ -125,7 +126,7 @@ class App extends Component {
             <div className="Product-name">{name.text}</div>
             <div className="Product-price">${price.text}</div>
           </div>
-          <Select options={['One','Two','Three','four']} onChange={(e)=>this.setState({[name.text]:e})}/>
+          <Select options={['Please Select :','One','Two','Three','four']} onChange={(e)=>this.setState({[name.text]:e})}/>
           <LINK to='/cart'><div className="Add-to-cart" onClick={()=>{this.ATC(products[i],this.state[name.text])}}>
               add to cart
           </div></LINK>
@@ -182,7 +183,8 @@ class App extends Component {
       onChange={(e)=>this.setState({shippingCost:e.value,shippingKind:e.label}) } 
       placeholder="Select Shipping" /> */}
     <Select 
-      options={[{label:`USPS ($ ${this.state.uspsShippingCost})`  ,value:this.state.uspsShippingCost},
+      options={[{label:'please select'},
+                {label:`USPS ($ ${this.state.uspsShippingCost})`  ,value:this.state.uspsShippingCost},
                 {label:`UPS ($ ${this.state.upsShippingCost})`    ,value:this.state.upsShippingCost},
                 {label:`FEDEX ($ ${this.state.fedexShippingCost})`,value:this.state.fedexShippingCost}]}
       onChange={(e)=>this.setState({shippingCost:e.value,shippingKind:e.label}) } 
