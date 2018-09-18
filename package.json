@@ -3,6 +3,7 @@
   "version": "0.3.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.3.1",
     "netlify-lambda": "^0.4.0",
     "nodemailer": "^4.6.8",
     "react": "^16.3.1",
