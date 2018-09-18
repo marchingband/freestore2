@@ -33,17 +33,21 @@ class Gallery extends Component{
     return(
       <div className='Gallery-Container'>
         <div className='Gallery-Left-Nav' onClick={this.handleClickLeft}>
-          <p className='Gallery-Left-Nav-Icon'>{'<'}</p>
+          <p className='Gallery-Left-Nav-Icon'
+             style={{opacity:view==0?.5:1}}
+          >{'<'}</p>
         </div>
         <img className='Gallery-Image' src={images[imageList[view]]}/>
         <div className='Gallery-Right-Nav' onClick={this.handleClickRight}>
-          <p className='Gallery-Right-Nav-Icon'>{'>'}</p>
+          <p className='Gallery-Right-Nav-Icon'
+             style={{opacity:view==imageList.length-1?.5:1}}
+          >{'>'}</p>
         </div>
       </div>
     )
   }
-  handleClickLeft=()=> this.setState(s=>({view: s.view<=0 ? this.props.imageList.length-1 : s.view-1}))
-  handleClickRight=()=>this.setState(s=>({view: s.view>=this.props.imageList.length-1 ? 0 : s.view+1}))
+  handleClickLeft=()=> this.setState(s=>({view: s.view==0 ? 0 : s.view-1}))
+  handleClickRight=()=>this.setState(s=>({view: s.view>=imageList.length-1 ? imageList.length-1 : s.view+1}))
 }
 
 class Select extends Component{
