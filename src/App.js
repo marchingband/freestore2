@@ -9,6 +9,7 @@ import {PUBLIC_KEY} from './PUBLIC_KEY.js'
 
 
 // const PUBLIC_KEY = 345657
+
 const SELECT_HEIGHT = 30
 const {storeName,products} = JSON.parse(data)
 const images = {}
@@ -47,7 +48,7 @@ class Gallery extends Component{
     )
   }
   handleClickLeft=()=> this.setState(s=>({view: s.view==0 ? 0 : s.view-1}))
-  handleClickRight=()=>this.setState(s=>({view: s.view>=imageList.length-1 ? imageList.length-1 : s.view+1}))
+  handleClickRight=()=>this.setState(s=>({view: s.view>=this.props.imageList.length-1 ? this.props.imageList.length-1 : s.view+1}))
 }
 
 class Select extends Component{

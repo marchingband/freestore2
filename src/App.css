@@ -38,6 +38,8 @@
 }
 .Cart-back:hover{
   opacity:.8;
+  transition: .2s ease-in-out;
+
 }
 
 
@@ -70,6 +72,7 @@
 }
 .Cart-footer-checkout:hover{
   opacity:.8;
+  transition: .2s ease-in-out;
 }
 .Cart-item-image{
   flex:1;
@@ -146,7 +149,7 @@
 }
 
 .Gallery-Image{
-  width:92%;
+  width:90%;
   border: 1px solid lightgray;
 }
 
@@ -156,14 +159,21 @@
   top:50%;
   user-select: none;
   transform: translate(0, -100%);
+  font-weight: 900;
+  font-size: 18px;
+  transition: .2s ease-in-out;
+
 }
 
 .Gallery-Right-Nav-Icon{
   position:relative;
   text-align: right;
   top:50%;
+  font-weight: 900;
   user-select: none;
   transform: translate(0, -100%);
+  transition: .2s ease-in-out;
+  font-size: 18px;
 }
 
 .Gallery-Left-Nav{
@@ -182,6 +192,7 @@
   top:0;
   right:0;
   cursor: pointer;
+
 }
 
 input{
@@ -274,7 +285,14 @@ input{
   border-top-width: 0px;
   cursor: pointer;
   z-index: 5;
+
 }
+
+.Select-Dropdown:hover {
+  color:grey;
+  transition: .2s ease-in-out;
+}
+
 
 .Select-Chevron{
   position: absolute;
@@ -287,12 +305,9 @@ input{
   font-size: 13px;
   border: 1px solid black;
   border-radius: 100px;
-  
+  transition: .2s ease-in-out;
 }
 
-.Select-Dropdown:hover {
-  border-color: "grey";
-}
 
 .Select-Main{
   box-sizing: border-box;
@@ -307,6 +322,8 @@ input{
 
 .Select-Main:hover {
   opacity: .6;
+  transition: .2s ease-in-out;
+
 }
 
 .Select-Text{
