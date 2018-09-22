@@ -219,7 +219,7 @@ class App extends Component {
               {/* <Route       path='/checkout'        render={p=> <Checkout {...p} />} /> */}
               {this.productPages.map(page=>
               <Route       path={'/'+u(page.path)} render={_=> page.html} /> )}
-              <Route                               render={_=> this.home} />
+              {/* <Route                               render={_=> this.home} /> */}
             </Switch>
           </div>
         </div>
