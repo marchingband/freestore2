@@ -202,8 +202,8 @@ class App extends Component {
     </div>
     <div>{"total with shipping : $" + (this.getTotal()+this.state.shippingCost).toFixed(2)}</div>
     <div>{"total with taxes    : $" + ((this.getTotal()+this.state.shippingCost)*1.15).toFixed(2)}</div>
-    <StripeCheckout token={this.onToken} stripeKey={PUBLIC_KEY}/>      
     </form>
+    <StripeCheckout token={this.onToken} stripeKey={PUBLIC_KEY}/>      
   </div>
   )}
 
